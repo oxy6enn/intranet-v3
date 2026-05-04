@@ -26,6 +26,8 @@ type PermissionRequestRow = {
   id: string;
   requesterName: string;
   requesterEmail: string;
+  reviewerName: string | null;
+  reviewerEmail: string | null;
   permissionCode: string;
   permissionName: string;
   reason: string;
@@ -143,9 +145,17 @@ export function PermissionRequestsReview({
                       <div className="space-y-2">
                         <Badge variant="secondary">{request.status}</Badge>
                         {request.reviewedAtLabel ? (
-                          <p className="text-xs text-muted-foreground">
-                            {request.reviewedAtLabel}
-                          </p>
+                          <div className="space-y-1 text-xs text-muted-foreground">
+                            <p>{request.reviewedAtLabel}</p>
+                            {request.reviewerName ? (
+                              <p>
+                                by {request.reviewerName}
+                                {request.reviewerEmail
+                                  ? ` (${request.reviewerEmail})`
+                                  : ""}
+                              </p>
+                            ) : null}
+                          </div>
                         ) : null}
                       </div>
                     </TableCell>

@@ -238,3 +238,14 @@ CODEX_STEP_BY_STEP.md
   - admin snapshot ถ้า role เป็น `admin` หรือ `super_admin`
 - แนวคิดของรอบนี้คือทำให้ dashboard เป็น “working control surface” มากขึ้น ไม่ใช่แค่ landing หลัง login
 
+## Admin Request Insights
+
+- หน้า `/admin/permission-requests` ถูกยกระดับจาก inbox ธรรมดาให้กลายเป็น insight surface สำหรับ admin
+- ตอนนี้แสดงข้อมูลจริงเพิ่มเติม เช่น:
+  - approval rate
+  - top requested permissions
+  - latest review activity
+  - most active requesters
+  - reviewer context ในตาราง review
+- เป้าหมายของรอบนี้คือให้ admin ตัดสินใจเรื่อง access ได้จากข้อมูลในหน้าเดียวมากขึ้น
+

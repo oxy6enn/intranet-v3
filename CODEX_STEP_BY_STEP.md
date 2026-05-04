@@ -580,3 +580,14 @@ Social Provider = Login method เสริมหลัง active
   - admin snapshot ถ้าเป็น admin
 - เป้าหมายของ phase นี้คือทำให้ dashboard เป็นจุดสรุปสถานะของ account และ workflow ปัจจุบันจริง ไม่ใช่แค่หน้าต้อนรับ
 
+## 22. Admin Request Insights
+
+- หลังมี permission request flow แล้ว ให้ต่อยอดหน้า `/admin/permission-requests` จาก inbox ธรรมดาเป็นหน้า insight สำหรับ admin
+- ตัวอย่าง insight ที่ควรเพิ่ม:
+  - approval rate
+  - top requested permissions
+  - most active requesters
+  - latest review activity
+  - reviewer context ต่อ request
+- แนวคิดคือให้ admin ตัดสินใจเรื่องการอนุมัติสิทธิ์ได้ดีขึ้นจากข้อมูลจริงในหน้าเดียว
+

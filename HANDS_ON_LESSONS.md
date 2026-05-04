@@ -575,3 +575,25 @@ Checklist หลังทำเสร็จ:
 - การ format ข้อมูลบน server ก่อนส่งเข้า client component
 - การ redesign dashboard โดยไม่ทำให้ selector และ e2e flow เดิมพัง
 
+---
+
+## Lesson Add-on: Admin Request Insights
+
+เป้าหมาย:
+
+- ทำให้หน้า review request ของ admin มีคุณค่าเชิงตัดสินใจมากกว่าการกด approve/reject อย่างเดียว
+
+สิ่งที่ควรเพิ่ม:
+
+- approval rate
+- top requested permissions
+- latest review activity
+- most active requesters
+- reviewer context ในตาราง
+
+สิ่งที่ควรเรียนรู้จากรอบนี้:
+
+- การ derive analytics เบื้องต้นจากข้อมูลจริงโดยไม่ต้องมีระบบ BI แยก
+- การออกแบบหน้า admin ให้เห็นทั้ง `queue` และ `insight` พร้อมกัน
+- การขยายหน้าเดิมโดยไม่กระทบ e2e flow หลัก
+
