@@ -76,3 +76,8 @@ export type Permission = Prisma.PermissionModel
  * 
  */
 export type UserPermission = Prisma.UserPermissionModel
+/**
+ * Model PermissionRequest
+ * 
+ */
+export type PermissionRequest = Prisma.PermissionRequestModel

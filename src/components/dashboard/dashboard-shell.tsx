@@ -6,6 +6,7 @@ import {
   Bell,
   ChartColumn,
   ChevronRight,
+  KeySquare,
   LayoutDashboard,
   Menu,
   Search,
@@ -26,10 +27,12 @@ type DashboardShellProps = {
   email: string;
   status: string;
   role: string;
+  pendingRequestCount: number;
 };
 
 const primaryNav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/permissions/request", label: "Permission requests", icon: KeySquare },
   { href: "/profile", label: "Profile", icon: UserCircle2 },
   { href: "/profile/security", label: "Security", icon: ShieldCheck },
 ];
@@ -46,8 +49,10 @@ export function DashboardShell({
   email,
   status,
   role,
+  pendingRequestCount,
 }: DashboardShellProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isAdmin = role === "admin" || role === "super_admin";
 
   return (
     <main className="min-h-screen bg-muted/40 text-foreground">
@@ -95,7 +100,7 @@ export function DashboardShell({
                   <div className="space-y-1">
                     <p className="font-medium">{name}</p>
                     <p
-                      className="text-sm text-muted-foreground break-all"
+                      className="break-all text-sm text-muted-foreground"
                       data-testid="dashboard-sidebar-email"
                     >
                       {email}
@@ -106,6 +111,12 @@ export function DashboardShell({
                 <div className="mt-4 flex flex-wrap gap-2">
                   <Badge variant="secondary">{status}</Badge>
                   <Badge variant="outline">{role}</Badge>
+                  {pendingRequestCount ? (
+                    <Badge variant="outline">
+                      {pendingRequestCount} pending request
+                      {pendingRequestCount > 1 ? "s" : ""}
+                    </Badge>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -142,7 +153,12 @@ export function DashboardShell({
               </div>
 
               <ThemeToggle />
-              <Button type="button" variant="outline" size="icon-sm" className="rounded-xl">
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                className="rounded-xl"
+              >
                 <Bell className="size-4" />
               </Button>
               <div className="hidden sm:block">
@@ -184,20 +200,35 @@ export function DashboardShell({
                   Welcome back, {name}
                 </h1>
                 <p className="max-w-3xl text-sm leading-7 text-muted-foreground">
-                  ตอนนี้บัญชีของคุณผ่าน register, login และ identify แล้ว
-                  พร้อมใช้หน้านี้เป็นจุดเริ่มต้นสำหรับทดลอง profile, security,
-                  permissions และ admin flow ต่อได้
+                  Your account is active and ready for internal workflows. Use
+                  this dashboard to review profile information, request extra
+                  access, and continue validating the system end-to-end.
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-3">
                 <Link
+                  href="/permissions/request"
+                  className={cn(
+                    buttonVariants({ variant: "outline" }),
+                    "rounded-xl"
+                  )}
+                >
+                  Request access
+                </Link>
+                <Link
                   href="/profile"
-                  className={cn(buttonVariants({ variant: "outline" }), "rounded-xl")}
+                  className={cn(
+                    buttonVariants({ variant: "outline" }),
+                    "rounded-xl"
+                  )}
                 >
                   Open profile
                 </Link>
-                <Link href="/profile/security" className={cn(buttonVariants({}), "rounded-xl")}>
+                <Link
+                  href="/profile/security"
+                  className={cn(buttonVariants({}), "rounded-xl")}
+                >
                   Security settings
                 </Link>
               </div>
@@ -246,7 +277,7 @@ export function DashboardShell({
                     "Email/password account created successfully",
                     "Employee identity linked through identify flow",
                     "Session middleware now routes by real user status",
-                    "Profile, security and admin areas are available by access rules",
+                    "Permission requests can now be submitted and reviewed",
                   ].map((item) => (
                     <div
                       key={item}
@@ -265,10 +296,38 @@ export function DashboardShell({
               <aside className="rounded-3xl border border-border bg-background p-6 shadow-sm">
                 <h2 className="text-xl font-semibold">Quick access</h2>
                 <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                  ใช้ลัดสำหรับเปิด flow ที่เกี่ยวข้องกับการทดสอบระบบและตรวจสอบสถานะบัญชีของคุณ
+                  Open the user flows that matter most for access review,
+                  profile verification, and account preparation.
                 </p>
 
                 <div className="mt-6 grid gap-3">
+                  {isAdmin ? (
+                    <Link
+                      href="/admin/permission-requests"
+                      className={cn(
+                        buttonVariants({ variant: "outline" }),
+                        "justify-start rounded-xl"
+                      )}
+                    >
+                      <ShieldCheck className="size-4" />
+                      Review request inbox
+                    </Link>
+                  ) : null}
+                  <Link
+                    href="/permissions/request"
+                    className={cn(
+                      buttonVariants({ variant: "outline" }),
+                      "justify-start rounded-xl"
+                    )}
+                  >
+                    <KeySquare className="size-4" />
+                    Permission requests
+                    {pendingRequestCount ? (
+                      <Badge variant="secondary" className="ml-auto">
+                        {pendingRequestCount}
+                      </Badge>
+                    ) : null}
+                  </Link>
                   <Link
                     href="/profile"
                     className={cn(
@@ -305,6 +364,12 @@ export function DashboardShell({
                     <p>
                       <span className="font-medium text-foreground">Role:</span>{" "}
                       {role}
+                    </p>
+                    <p>
+                      <span className="font-medium text-foreground">
+                        Pending requests:
+                      </span>{" "}
+                      {pendingRequestCount}
                     </p>
                   </div>
                 </div>

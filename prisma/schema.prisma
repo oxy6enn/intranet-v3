@@ -20,6 +20,8 @@ model User {
   accounts        Account[]
   claimedEmployee Employee?        @relation("EmployeeClaim")
   permissions     UserPermission[]
+  permissionRequests         PermissionRequest[] @relation("PermissionRequestOwner")
+  reviewedPermissionRequests PermissionRequest[] @relation("PermissionRequestReviewer")
   sessions        Session[]
 
   @@map("user")
@@ -95,6 +97,7 @@ model Permission {
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   users       UserPermission[]
+  requests    PermissionRequest[]
 }
 
 model UserPermission {
@@ -107,4 +110,23 @@ model UserPermission {
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, permissionId])
+}
+
+model PermissionRequest {
+  id           String     @id @default(cuid())
+  userId       String
+  permissionId String
+  reason       String
+  status       String     @default("pending")
+  reviewedBy   String?
+  reviewedAt   DateTime?
+  reviewNote   String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  reviewer     User?      @relation("PermissionRequestReviewer", fields: [reviewedBy], references: [id])
+  user         User       @relation("PermissionRequestOwner", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([permissionId, status])
 }

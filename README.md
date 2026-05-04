@@ -193,3 +193,37 @@ CODEX_STEP_BY_STEP.md
   - `test: cover admin access redirects`
   - `docs: update redesign and e2e notes`
 
+## Permission Request Workflow
+
+- เพิ่ม flow ใหม่สำหรับผู้ใช้ `active` ที่ต้องการสิทธิ์เพิ่มจาก role ปัจจุบัน
+- หน้าใหม่:
+  - `/permissions/request` สำหรับส่งคำขอสิทธิ์
+  - `/admin/permission-requests` สำหรับ review โดย admin
+- เพิ่ม model `PermissionRequest` ใน Prisma เพื่อเก็บ:
+  - ผู้ขอ
+  - permission ที่ต้องการ
+  - reason
+  - status `pending | approved | rejected`
+  - reviewer, reviewedAt, reviewNote
+- เมื่อ admin `approve`:
+  - ระบบจะสร้าง `UserPermission` ให้ทันทีถ้ายังไม่มี
+  - request จะถูกอัปเดตเป็น `approved`
+- เมื่อ admin `reject`:
+  - request จะถูกอัปเดตเป็น `rejected`
+- dashboard ถูกเชื่อมกับ feature นี้แล้ว:
+  - user เห็น quick access ไป `/permissions/request`
+  - admin เห็น quick access ไป `/admin/permission-requests`
+  - session summary แสดงจำนวน `pending requests`
+
+## E2E Coverage Update
+
+- เพิ่ม Playwright flow ใหม่:
+  - `permission-request-flow.spec.ts`
+- flow นี้ทดสอบครบ:
+  - user สมัครและ identify
+  - user ส่ง permission request
+  - admin สมัครและ identify
+  - admin approve request
+  - direct permission ปรากฏใน `/admin/users`
+- ตอนนี้ e2e suite ครอบคลุมทั้งหมด `8 flows`
+

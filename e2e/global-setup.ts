@@ -13,6 +13,11 @@ import {
   E2E_NON_ADMIN_EMPLOYEE,
   E2E_NON_ADMIN_USER,
   E2E_PENDING_USER,
+  E2E_REQUEST_ADMIN_EMPLOYEE,
+  E2E_REQUEST_ADMIN_USER,
+  E2E_REQUEST_EMPLOYEE,
+  E2E_REQUEST_PERMISSION,
+  E2E_REQUEST_USER,
   E2E_PERMISSION_TARGET_EMPLOYEE,
   E2E_PERMISSION_TARGET_USER,
   E2E_PERMISSION_ADMIN_EMPLOYEE,
@@ -126,6 +131,8 @@ async function globalSetup() {
     await deleteUserByEmail(client, E2E_NON_ADMIN_USER.email);
     await deleteUserByEmail(client, E2E_PENDING_USER.email);
     await deleteUserByEmail(client, E2E_SUSPENDED_USER.email);
+    await deleteUserByEmail(client, E2E_REQUEST_USER.email);
+    await deleteUserByEmail(client, E2E_REQUEST_ADMIN_USER.email);
 
     await resetEmployee(client, {
       id: "e2e-employee-emp001",
@@ -190,6 +197,24 @@ async function globalSetup() {
       department: "Compliance",
     });
 
+    await resetEmployee(client, {
+      id: "e2e-employee-emp008",
+      code: E2E_REQUEST_EMPLOYEE.code,
+      temporaryPassword: E2E_REQUEST_EMPLOYEE.temporaryPassword,
+      fullName: "E2E Request User Employee",
+      position: "Project Officer",
+      department: "Operations",
+    });
+
+    await resetEmployee(client, {
+      id: "e2e-employee-emp009",
+      code: E2E_REQUEST_ADMIN_EMPLOYEE.code,
+      temporaryPassword: E2E_REQUEST_ADMIN_EMPLOYEE.temporaryPassword,
+      fullName: "E2E Request Admin Employee",
+      position: "Access Manager",
+      department: "Governance",
+    });
+
     await client.query(
       'DELETE FROM "Employee" WHERE "employeeCode" = $1 AND "claimedUserId" IS NULL',
       [E2E_CREATED_EMPLOYEE.code]
@@ -211,6 +236,15 @@ async function globalSetup() {
 
     await client.query('DELETE FROM "Permission" WHERE code = $1', [
       E2E_ASSIGN_PERMISSION.code,
+    ]);
+
+    await client.query(
+      'DELETE FROM "UserPermission" WHERE "permissionId" IN (SELECT id FROM "Permission" WHERE code = $1)',
+      [E2E_REQUEST_PERMISSION.code]
+    );
+
+    await client.query('DELETE FROM "Permission" WHERE code = $1', [
+      E2E_REQUEST_PERMISSION.code,
     ]);
 
     await client.query("COMMIT");

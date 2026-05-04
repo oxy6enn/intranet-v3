@@ -390,7 +390,8 @@ export const ModelName = {
   Verification: 'Verification',
   Employee: 'Employee',
   Permission: 'Permission',
-  UserPermission: 'UserPermission'
+  UserPermission: 'UserPermission',
+  PermissionRequest: 'PermissionRequest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -406,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "employee" | "permission" | "userPermission"
+    modelProps: "user" | "session" | "account" | "verification" | "employee" | "permission" | "userPermission" | "permissionRequest"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -928,6 +929,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PermissionRequest: {
+      payload: Prisma.$PermissionRequestPayload<ExtArgs>
+      fields: Prisma.PermissionRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PermissionRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PermissionRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PermissionRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PermissionRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.PermissionRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PermissionRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PermissionRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PermissionRequestPayload>
+        }
+        findMany: {
+          args: Prisma.PermissionRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PermissionRequestPayload>[]
+        }
+        create: {
+          args: Prisma.PermissionRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PermissionRequestPayload>
+        }
+        createMany: {
+          args: Prisma.PermissionRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PermissionRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PermissionRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.PermissionRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PermissionRequestPayload>
+        }
+        update: {
+          args: Prisma.PermissionRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PermissionRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.PermissionRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PermissionRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PermissionRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PermissionRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.PermissionRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PermissionRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.PermissionRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePermissionRequest>
+        }
+        groupBy: {
+          args: Prisma.PermissionRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PermissionRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PermissionRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PermissionRequestCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1065,6 +1140,22 @@ export const UserPermissionScalarFieldEnum = {
 } as const
 
 export type UserPermissionScalarFieldEnum = (typeof UserPermissionScalarFieldEnum)[keyof typeof UserPermissionScalarFieldEnum]
+
+
+export const PermissionRequestScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  permissionId: 'permissionId',
+  reason: 'reason',
+  status: 'status',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
+  reviewNote: 'reviewNote',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PermissionRequestScalarFieldEnum = (typeof PermissionRequestScalarFieldEnum)[keyof typeof PermissionRequestScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1262,6 +1353,7 @@ export type GlobalOmitConfig = {
   employee?: Prisma.EmployeeOmit
   permission?: Prisma.PermissionOmit
   userPermission?: Prisma.UserPermissionOmit
+  permissionRequest?: Prisma.PermissionRequestOmit
 }
 
 /* Types for Logging */

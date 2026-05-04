@@ -2,6 +2,8 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { auth } from "@/lib/auth";
+import { PERMISSION_REQUEST_STATUS } from "@/lib/permission-request-status";
+import { prisma } from "@/lib/prisma";
 import { USER_STATUS } from "@/lib/user-status";
 
 export default async function DashboardPage() {
@@ -21,12 +23,20 @@ export default async function DashboardPage() {
     redirect("/identify");
   }
 
+  const pendingRequestCount = await prisma.permissionRequest.count({
+    where: {
+      userId: session.user.id,
+      status: PERMISSION_REQUEST_STATUS.PENDING,
+    },
+  });
+
   return (
     <DashboardShell
       name={session.user.name}
       email={session.user.email}
       status={session.user.status}
       role={session.user.role}
+      pendingRequestCount={pendingRequestCount}
     />
   );
 }

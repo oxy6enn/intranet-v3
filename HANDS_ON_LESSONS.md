@@ -518,3 +518,38 @@ test: cover pending user access redirect
 docs: update redesign and git workflow notes
 ```
 
+---
+
+## Lesson Add-on: Permission Request Flow
+
+เป้าหมาย:
+
+- ให้ผู้ใช้ที่เป็น `active` ขอ permission เพิ่มจาก role ปัจจุบันได้
+- ให้ admin review และอนุมัติหรือปฏิเสธคำขอได้
+
+สิ่งที่ต้องมีใน feature นี้:
+
+- Prisma model `PermissionRequest`
+- หน้า `/permissions/request`
+- หน้า `/admin/permission-requests`
+- API สำหรับส่งคำขอ
+- API สำหรับ approve / reject
+
+สิ่งที่ควรเรียนรู้จากรอบนี้:
+
+- ความต่างระหว่าง `Permission` กับ `PermissionRequest`
+- การใช้ transaction ตอน admin อนุมัติ เพื่อ update request และสร้าง `UserPermission` ให้สอดคล้องกัน
+- การกัน duplicate request ด้วย business rules ไม่ใช่แค่ UI
+- การต่อ dashboard ให้เป็น entry point ของ feature ใหม่
+
+Checklist หลังทำเสร็จ:
+
+```text
+1. user active ส่ง request ได้
+2. ถ้ามี permission อยู่แล้ว ขอซ้ำไม่ได้
+3. ถ้ามี request pending อยู่แล้ว ขอซ้ำไม่ได้
+4. admin approve แล้วเกิด direct permission จริง
+5. admin reject แล้ว request เปลี่ยนสถานะจริง
+6. e2e suite เพิ่มจาก 7 เป็น 8 flows
+```
+

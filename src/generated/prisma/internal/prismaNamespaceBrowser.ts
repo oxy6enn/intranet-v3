@@ -57,7 +57,8 @@ export const ModelName = {
   Verification: 'Verification',
   Employee: 'Employee',
   Permission: 'Permission',
-  UserPermission: 'UserPermission'
+  UserPermission: 'UserPermission',
+  PermissionRequest: 'PermissionRequest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -174,6 +175,22 @@ export const UserPermissionScalarFieldEnum = {
 } as const
 
 export type UserPermissionScalarFieldEnum = (typeof UserPermissionScalarFieldEnum)[keyof typeof UserPermissionScalarFieldEnum]
+
+
+export const PermissionRequestScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  permissionId: 'permissionId',
+  reason: 'reason',
+  status: 'status',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
+  reviewNote: 'reviewNote',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PermissionRequestScalarFieldEnum = (typeof PermissionRequestScalarFieldEnum)[keyof typeof PermissionRequestScalarFieldEnum]
 
 
 export const SortOrder = {

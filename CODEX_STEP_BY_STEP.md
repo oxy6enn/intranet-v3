@@ -542,3 +542,30 @@ Social Provider = Login method เสริมหลัง active
   - `test: ...`
   - `docs: ...`
 
+## 19. Permission Request Workflow
+
+- เพิ่ม feature จริงตัวถัดไปหลังจาก auth/admin foundations เสร็จแล้ว:
+  - user สามารถขอ permission เพิ่มได้
+  - admin สามารถ approve / reject คำขอได้
+- โครงที่ต้องเพิ่มอย่างน้อย:
+  - Prisma model `PermissionRequest`
+  - หน้า `/permissions/request`
+  - หน้า `/admin/permission-requests`
+  - API สำหรับ create request
+  - API สำหรับ review request
+- กติกาหลักของ flow:
+  - เฉพาะ user `active` เท่านั้นที่ขอสิทธิ์ได้
+  - ถ้ามี `UserPermission` อยู่แล้ว ห้ามขอซ้ำ
+  - ถ้ามี request `pending` อยู่แล้ว ห้ามขอซ้ำ
+  - ถ้า admin approve ให้สร้าง `UserPermission` ทันที
+  - ถ้า admin reject ให้เก็บ review note ได้
+- dashboard ควรเชื่อมกับ flow นี้ด้วย เช่น quick access และ pending request count
+
+## 20. E2E Coverage Update
+
+- หลังเพิ่ม permission request flow แล้ว ให้เพิ่ม Playwright test อีก 1 flow:
+  - user request permission
+  - admin approve permission request
+  - direct assignment ปรากฏใน `/admin/users`
+- เมื่อเสร็จ suite ควรเพิ่มจาก `7` เป็น `8` flows
+

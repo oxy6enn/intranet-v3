@@ -100,3 +100,31 @@ export const E2E_SUSPENDED_EMPLOYEE = {
   code: "EMP007",
   temporaryPassword: "SuspendedTemp123!",
 };
+
+export const E2E_REQUEST_USER = {
+  name: "E2E Request User",
+  email: "e2e-request-user@example.com",
+  password: "E2ERequestUser123!",
+};
+
+export const E2E_REQUEST_EMPLOYEE = {
+  code: "EMP008",
+  temporaryPassword: "RequestUserTemp123!",
+};
+
+export const E2E_REQUEST_ADMIN_USER = {
+  name: "E2E Request Admin",
+  email: "e2e-request-admin@example.com",
+  password: "E2ERequestAdmin123!",
+};
+
+export const E2E_REQUEST_ADMIN_EMPLOYEE = {
+  code: "EMP009",
+  temporaryPassword: "RequestAdminTemp123!",
+};
+
+export const E2E_REQUEST_PERMISSION = {
+  code: "e2e:request-access",
+  name: "Request Access Permission",
+  description: "Permission used to verify request and approval flow in Playwright",
+};
