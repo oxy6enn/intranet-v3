@@ -597,3 +597,24 @@ Checklist หลังทำเสร็จ:
 - การออกแบบหน้า admin ให้เห็นทั้ง `queue` และ `insight` พร้อมกัน
 - การขยายหน้าเดิมโดยไม่กระทบ e2e flow หลัก
 
+---
+
+## Lesson Add-on: Notification Center
+
+เป้าหมาย:
+
+- ทำให้ผู้ใช้และ admin มีจุดรวม “เรื่องที่ต้องสนใจตอนนี้” ในระบบ
+
+สิ่งที่ควรมี:
+
+- หน้า `/notifications`
+- bell button ที่เชื่อมเข้าหน้านี้
+- badge count จากข้อมูลจริง
+- section แยกสำหรับ user updates และ admin queue
+
+สิ่งที่ควรเรียนรู้จากรอบนี้:
+
+- ความต่างระหว่าง `dashboard summary` กับ `notification center`
+- การ reuse ข้อมูลจาก permission request flow ให้เกิด UX ใหม่
+- การเพิ่ม route ใหม่โดยไม่ทำให้ e2e flow เดิมพัง
+

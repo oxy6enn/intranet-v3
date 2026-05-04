@@ -31,6 +31,7 @@ type DashboardShellProps = {
   status: string;
   role: string;
   pendingRequestCount: number;
+  notificationCount: number;
   employeeSummary: {
     employeeCode: string;
     department: string;
@@ -65,6 +66,7 @@ type DashboardShellProps = {
 
 const primaryNav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/notifications", label: "Notifications", icon: Bell },
   { href: "/permissions/request", label: "Permission requests", icon: KeySquare },
   { href: "/profile", label: "Profile", icon: UserCircle2 },
   { href: "/profile/security", label: "Security", icon: ShieldCheck },
@@ -76,6 +78,7 @@ export function DashboardShell({
   status,
   role,
   pendingRequestCount,
+  notificationCount,
   employeeSummary,
   directPermissions,
   requestStats,
@@ -206,14 +209,21 @@ export function DashboardShell({
               </div>
 
               <ThemeToggle />
-              <Button
-                type="button"
-                variant="outline"
-                size="icon-sm"
-                className="rounded-xl"
+              <Link
+                href="/notifications"
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "icon-sm" }),
+                  "relative rounded-xl"
+                )}
+                aria-label="Open notifications"
               >
                 <Bell className="size-4" />
-              </Button>
+                {notificationCount ? (
+                  <span className="absolute -right-1 -top-1 flex min-w-5 items-center justify-center rounded-full bg-foreground px-1.5 py-0.5 text-[10px] font-semibold text-background">
+                    {notificationCount > 99 ? "99+" : notificationCount}
+                  </span>
+                ) : null}
+              </Link>
               <div className="hidden sm:block">
                 <LogoutButton className="rounded-xl" />
               </div>
@@ -500,6 +510,21 @@ export function DashboardShell({
                 </div>
 
                 <div className="mt-6 grid gap-3 md:grid-cols-2">
+                  <Link
+                    href="/notifications"
+                    className={cn(
+                      buttonVariants({ variant: "outline" }),
+                      "justify-start rounded-xl"
+                    )}
+                  >
+                    <Bell className="size-4" />
+                    Notification center
+                    {notificationCount ? (
+                      <Badge variant="secondary" className="ml-auto">
+                        {notificationCount}
+                      </Badge>
+                    ) : null}
+                  </Link>
                   <Link
                     href="/permissions/request"
                     className={cn(

@@ -249,3 +249,14 @@ CODEX_STEP_BY_STEP.md
   - reviewer context ในตาราง review
 - เป้าหมายของรอบนี้คือให้ admin ตัดสินใจเรื่อง access ได้จากข้อมูลในหน้าเดียวมากขึ้น
 
+## Notification Center
+
+- เพิ่มหน้า `/notifications` เป็นจุดรวมสิ่งที่ต้องสนใจตอนนี้ของทั้ง user และ admin
+- ฝั่ง user:
+  - เห็น request updates ของตัวเอง
+  - เห็น review note และสถานะล่าสุดของ permission requests
+- ฝั่ง admin:
+  - เห็น pending review queue
+  - เห็น recent review decisions
+- ปุ่มกระดิ่งบน dashboard ถูกเชื่อมเข้ากับ route นี้แล้ว และแสดง badge count จากข้อมูลจริง
+

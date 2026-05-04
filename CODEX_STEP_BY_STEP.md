@@ -591,3 +591,14 @@ Social Provider = Login method เสริมหลัง active
   - reviewer context ต่อ request
 - แนวคิดคือให้ admin ตัดสินใจเรื่องการอนุมัติสิทธิ์ได้ดีขึ้นจากข้อมูลจริงในหน้าเดียว
 
+## 23. Notification Center
+
+- หลังจากมี dashboard real data และ admin insights แล้ว ให้เพิ่มหน้า `/notifications`
+- หน้านี้ควรเป็นจุดรวม “สิ่งที่ต้องสนใจตอนนี้” มากกว่าการเป็นประวัติทั้งหมด
+- ตัวอย่างข้อมูลที่ควรแสดง:
+  - user request updates
+  - review notes จาก admin
+  - pending review queue สำหรับ admin
+  - recent review decisions
+- ปุ่ม `Bell` ใน dashboard ควร link มาที่หน้านี้ และมี badge count จากข้อมูลจริง
+

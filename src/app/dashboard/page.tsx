@@ -24,6 +24,7 @@ export default async function DashboardPage() {
     redirect("/identify");
   }
 
+  const isAdmin = isAdminRole(session.user.role);
   const [
     userRecord,
     requestCounts,
@@ -89,7 +90,7 @@ export default async function DashboardPage() {
         },
       },
     }),
-    isAdminRole(session.user.role)
+    isAdmin
       ? Promise.all([
           prisma.permissionRequest.count({
             where: {
@@ -128,6 +129,9 @@ export default async function DashboardPage() {
 
   const pendingRequestCount =
     requestCountMap[PERMISSION_REQUEST_STATUS.PENDING] ?? 0;
+  const notificationCount = isAdmin
+    ? adminSnapshot?.pendingQueueCount ?? 0
+    : recentRequests.length;
 
   return (
     <DashboardShell
@@ -136,6 +140,7 @@ export default async function DashboardPage() {
       status={session.user.status}
       role={session.user.role}
       pendingRequestCount={pendingRequestCount}
+      notificationCount={notificationCount}
       employeeSummary={
         userRecord?.claimedEmployee
           ? {
