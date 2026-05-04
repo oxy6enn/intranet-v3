@@ -262,6 +262,16 @@ export default async function NotificationsPage() {
                 Request access
               </Link>
               <Link
+                href="/activity"
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
+                  "justify-start rounded-xl"
+                )}
+              >
+                <Clock3 className="size-4" />
+                Open activity log
+              </Link>
+              <Link
                 href="/profile"
                 className={cn(
                   buttonVariants({ variant: "outline" }),

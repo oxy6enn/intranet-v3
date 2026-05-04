@@ -618,3 +618,24 @@ Checklist หลังทำเสร็จ:
 - การ reuse ข้อมูลจาก permission request flow ให้เกิด UX ใหม่
 - การเพิ่ม route ใหม่โดยไม่ทำให้ e2e flow เดิมพัง
 
+---
+
+## Lesson Add-on: Activity Log
+
+เป้าหมาย:
+
+- ทำให้ระบบมี timeline กลางของเหตุการณ์สำคัญที่ดูย้อนหลังได้
+
+สิ่งที่ควรมี:
+
+- model `ActivityEvent`
+- helper กลางสำหรับ create event
+- หน้า `/activity`
+- การ log จาก route สำคัญ เช่น identify และ permission review
+
+สิ่งที่ควรเรียนรู้จากรอบนี้:
+
+- ความต่างระหว่าง `notification` กับ `activity log`
+- การเก็บ snapshot ใน event เพื่อไม่ให้ timeline พังเมื่อข้อมูลหลักเปลี่ยน
+- การออกแบบ event schema ให้ขยายต่อได้ในอนาคต
+

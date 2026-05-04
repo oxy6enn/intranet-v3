@@ -130,3 +130,20 @@ model PermissionRequest {
   @@index([userId, status])
   @@index([permissionId, status])
 }
+
+model ActivityEvent {
+  id            String   @id @default(cuid())
+  eventType     String
+  actorId       String?
+  actorName     String?
+  subjectUserId String?
+  subjectName   String?
+  entityType    String?
+  entityId      String?
+  title         String
+  description   String
+  createdAt     DateTime @default(now())
+
+  @@index([subjectUserId, createdAt])
+  @@index([eventType, createdAt])
+}

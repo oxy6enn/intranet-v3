@@ -1,4 +1,8 @@
 import { z } from "zod";
+import {
+  ACTIVITY_EVENT_TYPES,
+  createActivityEvent,
+} from "@/lib/activity-events";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { verifyTemporaryPassword } from "@/lib/temp-password";
@@ -219,6 +223,18 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
+
+  await createActivityEvent({
+    eventType: ACTIVITY_EVENT_TYPES.IDENTIFY_COMPLETED,
+    actorId: session.user.id,
+    actorName: session.user.name,
+    subjectUserId: session.user.id,
+    subjectName: session.user.name,
+    entityType: "employee",
+    entityId: employee.employeeCode,
+    title: "Employee identity verified",
+    description: `${session.user.name} linked employee code ${employee.employeeCode} successfully.`,
+  });
 
   return Response.json({
     success: true,

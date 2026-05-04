@@ -1,3 +1,7 @@
+import {
+  ACTIVITY_EVENT_TYPES,
+  createActivityEvent,
+} from "@/lib/activity-events";
 import { auth } from "@/lib/auth";
 import { PERMISSION_REQUEST_STATUS } from "@/lib/permission-request-status";
 import { prisma } from "@/lib/prisma";
@@ -127,6 +131,18 @@ export async function POST(request: Request) {
       reason,
       status: PERMISSION_REQUEST_STATUS.PENDING,
     },
+  });
+
+  await createActivityEvent({
+    eventType: ACTIVITY_EVENT_TYPES.PERMISSION_REQUEST_CREATED,
+    actorId: session.user.id,
+    actorName: session.user.name,
+    subjectUserId: session.user.id,
+    subjectName: session.user.name,
+    entityType: "permission_request",
+    entityId: permissionId,
+    title: "Permission request submitted",
+    description: `${session.user.name} requested ${permission.name}.`,
   });
 
   return Response.json({

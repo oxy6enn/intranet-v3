@@ -58,7 +58,8 @@ export const ModelName = {
   Employee: 'Employee',
   Permission: 'Permission',
   UserPermission: 'UserPermission',
-  PermissionRequest: 'PermissionRequest'
+  PermissionRequest: 'PermissionRequest',
+  ActivityEvent: 'ActivityEvent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -191,6 +192,23 @@ export const PermissionRequestScalarFieldEnum = {
 } as const
 
 export type PermissionRequestScalarFieldEnum = (typeof PermissionRequestScalarFieldEnum)[keyof typeof PermissionRequestScalarFieldEnum]
+
+
+export const ActivityEventScalarFieldEnum = {
+  id: 'id',
+  eventType: 'eventType',
+  actorId: 'actorId',
+  actorName: 'actorName',
+  subjectUserId: 'subjectUserId',
+  subjectName: 'subjectName',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  title: 'title',
+  description: 'description',
+  createdAt: 'createdAt'
+} as const
+
+export type ActivityEventScalarFieldEnum = (typeof ActivityEventScalarFieldEnum)[keyof typeof ActivityEventScalarFieldEnum]
 
 
 export const SortOrder = {

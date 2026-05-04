@@ -260,3 +260,14 @@ CODEX_STEP_BY_STEP.md
   - เห็น recent review decisions
 - ปุ่มกระดิ่งบน dashboard ถูกเชื่อมเข้ากับ route นี้แล้ว และแสดง badge count จากข้อมูลจริง
 
+## Activity Log
+
+- เพิ่ม model `ActivityEvent` สำหรับเก็บ event สำคัญของระบบแบบเป็นกลาง
+- ตอนนี้ระบบบันทึก event อย่างน้อยในจุดต่อไปนี้:
+  - identify success
+  - permission request created
+  - permission request approved
+  - permission request rejected
+- เพิ่มหน้า `/activity` เพื่อดู timeline ของเหตุการณ์เหล่านี้
+- dashboard และ notification center ถูกเชื่อม route ไปยัง activity log แล้ว
+

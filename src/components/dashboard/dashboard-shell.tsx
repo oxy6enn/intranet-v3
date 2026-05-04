@@ -66,6 +66,7 @@ type DashboardShellProps = {
 
 const primaryNav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/activity", label: "Activity", icon: Clock3 },
   { href: "/notifications", label: "Notifications", icon: Bell },
   { href: "/permissions/request", label: "Permission requests", icon: KeySquare },
   { href: "/profile", label: "Profile", icon: UserCircle2 },
@@ -510,6 +511,16 @@ export function DashboardShell({
                 </div>
 
                 <div className="mt-6 grid gap-3 md:grid-cols-2">
+                  <Link
+                    href="/activity"
+                    className={cn(
+                      buttonVariants({ variant: "outline" }),
+                      "justify-start rounded-xl"
+                    )}
+                  >
+                    <Clock3 className="size-4" />
+                    Activity log
+                  </Link>
                   <Link
                     href="/notifications"
                     className={cn(

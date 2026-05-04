@@ -81,3 +81,8 @@ export type UserPermission = Prisma.UserPermissionModel
  * 
  */
 export type PermissionRequest = Prisma.PermissionRequestModel
+/**
+ * Model ActivityEvent
+ * 
+ */
+export type ActivityEvent = Prisma.ActivityEventModel

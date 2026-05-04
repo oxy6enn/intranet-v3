@@ -602,3 +602,20 @@ Social Provider = Login method เสริมหลัง active
   - recent review decisions
 - ปุ่ม `Bell` ใน dashboard ควร link มาที่หน้านี้ และมี badge count จากข้อมูลจริง
 
+## 24. Activity Log
+
+- ถ้าระบบเริ่มมี event สำคัญหลายจุดแล้ว ให้เพิ่ม model กลางสำหรับเก็บ `ActivityEvent`
+- อย่าออกแบบ activity log ให้ผูกกับตารางใดตารางหนึ่งมากเกินไป
+- แนวทางที่ยืดหยุ่นคือเก็บ:
+  - `eventType`
+  - actor snapshot
+  - subject snapshot
+  - title
+  - description
+  - entityType / entityId
+- จุดเริ่มต้นที่ควร log ก่อน:
+  - identify success
+  - permission request created
+  - permission request approved / rejected
+- จากนั้นค่อยเพิ่มหน้า `/activity` เพื่อใช้เป็น timeline กลางของระบบ
+
