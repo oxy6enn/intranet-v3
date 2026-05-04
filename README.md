@@ -227,3 +227,14 @@ CODEX_STEP_BY_STEP.md
   - direct permission ปรากฏใน `/admin/users`
 - ตอนนี้ e2e suite ครอบคลุมทั้งหมด `8 flows`
 
+## Dashboard Content Update
+
+- หน้า `/dashboard` ไม่ได้ใช้ค่าคงที่อย่างเดียวอีกแล้ว แต่ดึงข้อมูลจริงจากฐานข้อมูล
+- สิ่งที่แสดงจริงใน dashboard ตอนนี้มี:
+  - direct permissions ของผู้ใช้
+  - request stats (`pending / approved / rejected`)
+  - recent permission requests
+  - employee summary ของ account ที่ identify แล้ว
+  - admin snapshot ถ้า role เป็น `admin` หรือ `super_admin`
+- แนวคิดของรอบนี้คือทำให้ dashboard เป็น “working control surface” มากขึ้น ไม่ใช่แค่ landing หลัง login
+

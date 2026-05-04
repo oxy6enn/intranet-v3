@@ -553,3 +553,25 @@ Checklist หลังทำเสร็จ:
 6. e2e suite เพิ่มจาก 7 เป็น 8 flows
 ```
 
+---
+
+## Lesson Add-on: Dashboard With Real Data
+
+เป้าหมาย:
+
+- เปลี่ยน dashboard จากค่าตัวอย่างให้กลายเป็นหน้าสรุปข้อมูลจริงของผู้ใช้
+
+สิ่งที่ควรดึงขึ้นมาแสดง:
+
+- direct permissions
+- request stats
+- recent permission requests
+- employee summary หลัง identify
+- admin snapshot ถ้า user เป็น admin
+
+สิ่งที่ควรเรียนรู้จากรอบนี้:
+
+- การใช้ server component เป็นจุดรวม query หลายชุดจาก Prisma
+- การ format ข้อมูลบน server ก่อนส่งเข้า client component
+- การ redesign dashboard โดยไม่ทำให้ selector และ e2e flow เดิมพัง
+

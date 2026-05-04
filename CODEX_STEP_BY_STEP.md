@@ -569,3 +569,14 @@ Social Provider = Login method เสริมหลัง active
   - direct assignment ปรากฏใน `/admin/users`
 - เมื่อเสร็จ suite ควรเพิ่มจาก `7` เป็น `8` flows
 
+## 21. Dashboard With Real Data
+
+- หลังจาก auth, admin, และ permission request flow เริ่มนิ่งแล้ว ให้เริ่มแทนค่าคงที่ใน dashboard ด้วยข้อมูลจริงจากฐานข้อมูล
+- ตัวอย่างข้อมูลที่ควรดึง:
+  - direct permissions ของ user
+  - permission request stats
+  - recent requests
+  - linked employee summary
+  - admin snapshot ถ้าเป็น admin
+- เป้าหมายของ phase นี้คือทำให้ dashboard เป็นจุดสรุปสถานะของ account และ workflow ปัจจุบันจริง ไม่ใช่แค่หน้าต้อนรับ
+
