@@ -195,166 +195,25 @@ if (process.env.NODE_ENV !== "production") {
 - provider อย่าง Google / LINE ควรเปิดใช้แบบ conditional ตาม env
 - ThaiD ในรอบนี้ยังเป็น placeholder เพื่อเตรียมไปสู่ Generic OAuth / OIDC ภายหลัง
 
-## Flow Update: Register / Login / Identify
+## Detailed References
 
-- หน้า `/register` และ `/login` ควรเช็ก session ฝั่ง server ด้วย `auth.api.getSession({ headers: await headers() })`
-- ถ้า user ยังอยู่สถานะ `pending_identify` แล้วเผลอกดย้อนกลับมาหน้า auth ให้ redirect กลับ `/identify` อัตโนมัติ
-- ถ้า user เป็น `active` ให้ redirect ไป `/dashboard`
-- ถ้า user เป็น `suspended` ให้ redirect ไป `/suspended`
-- หน้า `/identify` ควรแสดงอีเมลของบัญชีใน session ปัจจุบันด้วย เพื่อให้ผู้ใช้รู้ชัดว่ากำลัง identify ของใครอยู่
+README ตั้งใจให้เป็นหน้าเริ่มต้นที่อ่านเร็ว ดังนั้นรายละเอียดเชิงลึกถูกแยกไว้ดังนี้:
 
-## E2E Troubleshooting
-
-- คำสั่ง `npm run test:e2e:headed` คือการรัน Playwright แบบเปิดหน้าต่าง browser เพื่อดู flow จริงระหว่าง test
-- ถ้า error ว่า `spawn EPERM` หรือเปิด browser ไม่ได้ใน sandbox ของ Codex ไม่ได้แปลว่า test พังเสมอไป แต่เป็นข้อจำกัดของ environment ที่ไม่ยอม spawn browser process ให้ไปลองรันบนเครื่อง local แทน
-- ถ้า test ค้างที่หน้า `/register` หรือ `/login` ทั้งที่กด submit แล้ว ให้เช็ก `playwright.config.ts` ว่า `baseURL` และ `webServer.url` ใช้ host เดียวกับ `BETTER_AUTH_URL` ใน `.env`
-- ในโปรเจกต์นี้ควรใช้ `http://localhost:3000` ให้ตรงกัน เพราะถ้า Playwright ใช้ `127.0.0.1` แต่ Better Auth ใช้ `localhost` cookie และ origin อาจไม่ตรงกันจน register หรือ login ไม่สำเร็จ
-- ถ้าเจออาการ browser พาไป `GET /register?...` หรือ `GET /login?...` แปลว่ามี native form submit เกิดก่อน React handle event ฝั่ง client
-- วิธีแก้ที่ใช้ในโปรเจกต์นี้คือให้ปุ่มส่งฟอร์มเป็น `type="button"` แล้วเรียก `form.handleSubmit(onSubmit)()` ผ่าน `onClick` แทนการพึ่ง native submit โดยตรง
-- ถ้า test บางรอบไม่เสถียร ให้ใช้ `data-testid` กับปุ่มหลัก และให้ Playwright รอ page settle ก่อนคลิก เช่น `waitForLoadState("domcontentloaded")`
-- ถ้า register หรือ identify ไม่ผ่านเพราะข้อมูลทดสอบค้างอยู่ ให้เช็ก `e2e/global-setup.ts` ว่า reset user ทดสอบและคืนค่า sample employee แล้วหรือยัง
-- ถ้าต้องการดูว่าติดตรงไหนจริง ให้ใช้ `npm run test:e2e:headed` เพื่อเห็น browser เดินทีละขั้น และเปิด screenshot/video ในโฟลเดอร์ `test-results/` ประกอบ
-
-## E2E Coverage
-
-- ตอนนี้โปรเจกต์มี Playwright e2e ครอบคลุม 7 flows สำคัญแล้ว
-- `auth-flow.spec.ts` ทดสอบ `register -> identify -> dashboard -> logout -> login`
-- `admin-employees.spec.ts` ทดสอบ admin สร้าง employee record
-- `admin-permissions.spec.ts` ทดสอบ admin สร้าง permission record
-- `admin-user-permissions.spec.ts` ทดสอบ admin assign direct permission ให้ user
-- `admin-access.spec.ts` ทดสอบว่า active user ที่ไม่ใช่ admin ถูก redirect ออกจาก `/admin/*`
-- `pending-access.spec.ts` ทดสอบว่า user ที่ยัง `pending_identify` ถูก redirect ออกจาก `/dashboard` กลับ `/identify`
-- `suspended-access.spec.ts` ทดสอบว่า user ที่ถูกตั้งสถานะ `suspended` ถูก redirect ไป `/suspended`
-- ชุด test ตอนนี้จึงครอบทั้ง happy paths และ access-control paths หลักของระบบแล้ว
-- บน Windows เราใช้ production server สำหรับ e2e แทน `next dev` เพื่อลดปัญหา `.next/dev` และ Turbopack ระหว่างรัน browser test
-- config ปัจจุบันจึง build ก่อนอัตโนมัติ, เปิด `next start -p 3000`, และรัน `1 worker` เพื่อให้ suite เสถียรขึ้น
-
-## UI Redesign Notes
-
-- ตอนนี้หน้า `/`, `/register`, `/login`, `/identify`, `/dashboard`, `/profile`, `/profile/security`, `/suspended` และหน้า admin หลัก ถูกปรับไปทาง visual style แบบ `default shadcn/ui` + `shadcnblocks` reference แล้ว
-- landing page ใช้แนวทางโปร่ง, spacing เยอะ, hero ใหญ่, grid background และ section chips
-- auth pages ใช้ centered layout ที่เรียบขึ้น เพื่อให้ form เป็นจุดโฟกัสหลัก
-- dashboard ใช้ app-shell pattern ที่มี sidebar, topbar, search, metric cards และ quick actions
-- admin pages ใช้โครงแบบ data product มากขึ้น เช่น card shell, clean tables, muted headers และฟอร์มที่เรียบสม่ำเสมอ
-- การ redesign รอบนี้ยังคง `id` และ `data-testid` สำคัญไว้ เพื่อไม่ให้ e2e suite แตกโดยไม่จำเป็น
-
-## Thai Font And Encoding Notes
-
-- ฟอนต์หลักของระบบถูกจัดให้ใช้ `Anuphan` เป็นตัวตั้งต้นก่อน `Inter`
-- toast notifications ก็ถูกบังคับให้ใช้ฟอนต์ไทยตามระบบหลักแล้ว
-- ถ้าเห็นตัวอักษรลักษณะ `เธ...` ปัญหามักไม่ได้มาจากฟอนต์ แต่เกิดจาก source text ในไฟล์เพี้ยนตั้งแต่ encoding
-- ในรอบล่าสุดเราไล่ซ่อมข้อความเพี้ยนใน `src/` แล้ว และเช็กซ้ำว่าไม่เหลือข้อความ `เธ...` ใน source ฝั่งแอป
-- หลังแก้ข้อความไทยและปรับ UI ใหม่ ชุด Playwright e2e ทั้ง 7 flows ยังผ่านครบอยู่
-
-## Git Workflow Notes
-
-- หลังจากทำ feature เสร็จเป็นช่วง ๆ ให้ commit แยกตาม feature แทนการรวมหลายเรื่องไว้ใน commit เดียว
-- ให้พยายามทำให้แต่ละ feature complete ในระดับนี้ก่อน commit:
-  - code ของ feature ใช้งานได้
-  - `npm run lint` ผ่าน
-  - `npm run build` ผ่าน
-  - ถ้า feature กระทบ flow สำคัญ ให้รัน e2e ที่เกี่ยวข้องด้วย
-- repository ปลายทางของโปรเจกต์นี้คือ:
-  - `https://github.com/oxy6enn/intranet-v3.git`
-- แนวทาง commit message ที่ควรใช้:
-  - `feat: add permission request workflow`
-  - `fix: resolve thai text encoding in auth pages`
-  - `test: cover admin access redirects`
-  - `docs: update redesign and e2e notes`
-
-## Permission Request Workflow
-
-- เพิ่ม flow ใหม่สำหรับผู้ใช้ `active` ที่ต้องการสิทธิ์เพิ่มจาก role ปัจจุบัน
-- หน้าใหม่:
-  - `/permissions/request` สำหรับส่งคำขอสิทธิ์
-  - `/admin/permission-requests` สำหรับ review โดย admin
-- เพิ่ม model `PermissionRequest` ใน Prisma เพื่อเก็บ:
-  - ผู้ขอ
-  - permission ที่ต้องการ
-  - reason
-  - status `pending | approved | rejected`
-  - reviewer, reviewedAt, reviewNote
-- เมื่อ admin `approve`:
-  - ระบบจะสร้าง `UserPermission` ให้ทันทีถ้ายังไม่มี
-  - request จะถูกอัปเดตเป็น `approved`
-- เมื่อ admin `reject`:
-  - request จะถูกอัปเดตเป็น `rejected`
-- dashboard ถูกเชื่อมกับ feature นี้แล้ว:
-  - user เห็น quick access ไป `/permissions/request`
-  - admin เห็น quick access ไป `/admin/permission-requests`
-  - session summary แสดงจำนวน `pending requests`
-
-## E2E Coverage Update
-
-- เพิ่ม Playwright flow ใหม่:
-  - `permission-request-flow.spec.ts`
-- flow นี้ทดสอบครบ:
-  - user สมัครและ identify
-  - user ส่ง permission request
-  - admin สมัครและ identify
-  - admin approve request
-  - direct permission ปรากฏใน `/admin/users`
-- ตอนนี้ e2e suite ครอบคลุมทั้งหมด `8 flows`
-
-## Dashboard Content Update
-
-- หน้า `/dashboard` ไม่ได้ใช้ค่าคงที่อย่างเดียวอีกแล้ว แต่ดึงข้อมูลจริงจากฐานข้อมูล
-- สิ่งที่แสดงจริงใน dashboard ตอนนี้มี:
-  - direct permissions ของผู้ใช้
-  - request stats (`pending / approved / rejected`)
-  - recent permission requests
-  - employee summary ของ account ที่ identify แล้ว
-  - admin snapshot ถ้า role เป็น `admin` หรือ `super_admin`
-- แนวคิดของรอบนี้คือทำให้ dashboard เป็น “working control surface” มากขึ้น ไม่ใช่แค่ landing หลัง login
-
-## Admin Request Insights
-
-- หน้า `/admin/permission-requests` ถูกยกระดับจาก inbox ธรรมดาให้กลายเป็น insight surface สำหรับ admin
-- ตอนนี้แสดงข้อมูลจริงเพิ่มเติม เช่น:
-  - approval rate
-  - top requested permissions
-  - latest review activity
-  - most active requesters
-  - reviewer context ในตาราง review
-- เป้าหมายของรอบนี้คือให้ admin ตัดสินใจเรื่อง access ได้จากข้อมูลในหน้าเดียวมากขึ้น
-
-## Notification Center
-
-- เพิ่มหน้า `/notifications` เป็นจุดรวมสิ่งที่ต้องสนใจตอนนี้ของทั้ง user และ admin
-- ฝั่ง user:
-  - เห็น request updates ของตัวเอง
-  - เห็น review note และสถานะล่าสุดของ permission requests
-- ฝั่ง admin:
-  - เห็น pending review queue
-  - เห็น recent review decisions
-- ปุ่มกระดิ่งบน dashboard ถูกเชื่อมเข้ากับ route นี้แล้ว และแสดง badge count จากข้อมูลจริง
-
-## Activity Log
-
-- เพิ่ม model `ActivityEvent` สำหรับเก็บ event สำคัญของระบบแบบเป็นกลาง
-- ตอนนี้ระบบบันทึก event อย่างน้อยในจุดต่อไปนี้:
-  - identify success
-  - permission request created
-  - permission request approved
-  - permission request rejected
-- เพิ่มหน้า `/activity` เพื่อดู timeline ของเหตุการณ์เหล่านี้
-- dashboard และ notification center ถูกเชื่อม route ไปยัง activity log แล้ว
-
-## Search And Filters
-
-- เพิ่ม `search / filters` ให้ 3 หน้าสำคัญที่เป็น workspace ฝั่งปฏิบัติการ:
-  - `/activity`
-  - `/notifications`
-  - `/admin/permission-requests`
-- แนวทางที่ใช้คือให้ server page query ข้อมูลจริงตามเดิม แล้วส่งเข้า client view component เพื่อกรองแบบ realtime ฝั่ง UI
-- หน้า `/activity`:
-  - search ตาม title / description / actor / subject / event type
-  - filter `all / identify / request`
-- หน้า `/notifications`:
-  - search ตาม permission, note, reviewer, requester
-  - filter `all / updates / queue / reviews`
-- หน้า `/admin/permission-requests`:
-  - search ตาม requester, permission, review note, status
-  - filter `all / pending / approved / rejected`
-- เป้าหมายของรอบนี้คือทำให้ระบบ “ใช้งานจริง” ได้คล่องขึ้น โดยไม่เปลี่ยน backend contract เดิมและไม่กระทบ flow ทดสอบหลัก
+- `docs/FEATURES.md`
+  - รายการ feature ที่มีแล้ว
+  - dashboard / notifications / activity / permission request overview
+- `docs/TESTING.md`
+  - e2e coverage ปัจจุบัน
+  - troubleshooting การรัน test
+  - แนวทางตรวจงานก่อน commit
+- `docs/DECISIONS.md`
+  - เหตุผลของ auth flow
+  - Prisma 7 / Better Auth / docs strategy
+  - e2e strategy บน Windows
+- `docs/LESSONS.md`
+  - บันทึกการเรียนรู้
+  - troubleshooting เชิงประสบการณ์
+- `docs/ROADMAP.md`
+  - phase ถัดไป
+  - implementation direction แบบ step-by-step
 
