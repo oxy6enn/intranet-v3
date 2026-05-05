@@ -13,6 +13,8 @@ Email/Password → Identify Employee → Active User → Link Social Provider
 - `README.md` — ภาพรวมโปรเจกต์, สถานะล่าสุด, และภาพรวม feature
 - `docs/ROADMAP.md` — roadmap และ implementation plan แบบ step-by-step
 - `docs/LESSONS.md` — บทเรียน, troubleshooting, และสิ่งที่เรียนรู้ระหว่างพัฒนา
+- `docs/FEATURES.md` — สรุปว่า feature ไหนมีแล้วบ้างในระบบตอนนี้
+- `docs/TESTING.md` — วิธีรัน test, coverage ปัจจุบัน, และ troubleshooting ด้านการทดสอบ
 
 ต่อจากนี้ให้ใช้งานไฟล์ใน `docs/` เป็นแหล่งอ้างอิงหลักของโปรเจกต์
 
