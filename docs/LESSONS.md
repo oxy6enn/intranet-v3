@@ -666,3 +666,23 @@ Checklist หลังทำเสร็จ:
 - การใช้ `useDeferredValue` เพื่อลดความกระตุกเวลา filter ข้อมูล
 - การออกแบบหน้าแบบ “query on server, refine on client” เพื่อให้ต่อยอดง่ายและไม่เพิ่ม complexity ฝั่ง API เร็วเกินไป
 
+---
+
+## Lesson Add-on: Export And Reporting
+
+เป้าหมาย:
+
+- ทำให้ admin เอาข้อมูลที่เห็นบนหน้าจอไปใช้ต่อได้ทันที โดยไม่ต้องรอระบบ report เต็มรูปแบบ
+
+สิ่งที่ควรมี:
+
+- ปุ่ม export จากหน้า operation หลัก
+- export ชุดข้อมูลที่ถูก filter อยู่จริง
+- export summary สำหรับ insight ที่อ่านเร็ว
+
+สิ่งที่ควรเรียนรู้จากรอบนี้:
+
+- ความต่างระหว่าง `reporting UI` กับ `reporting backend`
+- เมื่อไรที่ client-side CSV export เพียงพอ
+- วิธี reuse filtered state เดิมให้เกิด feature ใหม่โดยไม่เพิ่ม API ก่อนเวลาอันควร
+

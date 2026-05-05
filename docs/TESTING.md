@@ -146,6 +146,14 @@ npm run test:e2e:headed
 - ใช้ `npm run test:e2e:headed` เพื่อดูพฤติกรรมจริง
 - ถ้า `lint`, `build`, และ `npm test` ผ่าน แต่ Playwright ล้มตั้งแต่ launch ให้แยกสาเหตุว่าเป็น environment หรือ application behavior
 
+### CSV export features
+
+ถ้ามี feature export แบบ client-side:
+
+- ให้ตรวจอย่างน้อยว่า `lint` และ `build` ผ่าน
+- ถ้า export อิงข้อมูลจาก filtered view ให้เช็กว่าปุ่ม export ใช้ชุดข้อมูลเดียวกับที่ render บนหน้าจอ
+- ถ้ายังไม่มี e2e ครอบ download behavior โดยตรง ให้บันทึกไว้ใน docs ว่า verification หลักของรอบนั้นอยู่ที่ UI logic และ manual browser check
+
 ## Recommended Verification Order
 
 เวลาปิดงานแต่ละ feature แนะนำให้เช็กตามลำดับนี้:

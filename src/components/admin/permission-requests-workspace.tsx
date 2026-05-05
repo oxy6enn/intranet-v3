@@ -1,7 +1,7 @@
 "use client";
 
 import { useDeferredValue, useMemo, useState } from "react";
-import { Search } from "lucide-react";
+import { Download, Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -56,6 +56,31 @@ type PermissionRequestsWorkspaceProps = {
 };
 
 type RequestStatusFilter = "all" | "pending" | "approved" | "rejected";
+
+function escapeCsvValue(value: string) {
+  const normalizedValue = value.replaceAll('"', '""');
+  return `"${normalizedValue}"`;
+}
+
+function downloadCsvFile(filename: string, rows: string[][]) {
+  const csvContent = rows
+    .map((row) => row.map((cell) => escapeCsvValue(cell)).join(","))
+    .join("\n");
+
+  const blob = new Blob([csvContent], {
+    type: "text/csv;charset=utf-8;",
+  });
+
+  const objectUrl = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = objectUrl;
+  link.download = filename;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(objectUrl);
+}
 
 function buildTopRequestedPermissions(
   requests: PermissionRequestWorkspaceRow[]
@@ -178,6 +203,75 @@ export function PermissionRequestsWorkspace({
   const topRequestedPermissions = buildTopRequestedPermissions(filteredRequests);
   const topRequesters = buildTopRequesters(filteredRequests);
   const latestReviewedRequests = buildLatestReviewedRequests(filteredRequests);
+  const normalizedQuery = deferredQuery.trim();
+
+  const exportVisibleRequests = () => {
+    const filenameSuffix =
+      statusFilter === "all" ? "all-statuses" : statusFilter;
+
+    downloadCsvFile(`permission-requests-${filenameSuffix}.csv`, [
+      [
+        "Requester Name",
+        "Requester Email",
+        "Permission Code",
+        "Permission Name",
+        "Status",
+        "Reason",
+        "Review Note",
+        "Reviewer Name",
+        "Reviewer Email",
+        "Created At",
+        "Reviewed At",
+      ],
+      ...filteredRequests.map((request) => [
+        request.requesterName,
+        request.requesterEmail,
+        request.permissionCode,
+        request.permissionName,
+        request.status,
+        request.reason,
+        request.reviewNote ?? "",
+        request.reviewerName ?? "",
+        request.reviewerEmail ?? "",
+        request.createdAtLabel,
+        request.reviewedAtLabel ?? "",
+      ]),
+    ]);
+  };
+
+  const exportSummaryReport = () => {
+    downloadCsvFile("permission-request-summary.csv", [
+      ["Metric", "Value"],
+      ["Visible Requests", String(filteredRequests.length)],
+      ["Total Requests", String(totalRequests)],
+      ["Pending Requests", String(pendingCount)],
+      ["Approved Requests", String(approvedCount)],
+      ["Rejected Requests", String(rejectedCount)],
+      ["Approval Rate", `${approvalRate}%`],
+      ["Status Filter", statusFilter],
+      ["Search Query", normalizedQuery || "-"],
+      [],
+      ["Top Requested Permissions", "Request Count"],
+      ...topRequestedPermissions.map((item) => [
+        `${item.name} (${item.code})`,
+        String(item.count),
+      ]),
+      [],
+      ["Most Active Requesters", "Request Count"],
+      ...topRequesters.map((item) => [
+        `${item.name} <${item.email}>`,
+        String(item.count),
+      ]),
+      [],
+      ["Latest Review Activity", "Details"],
+      ...latestReviewedRequests.map((request) => [
+        request.requesterName,
+        `${request.permissionCode} / ${request.status} / reviewer: ${
+          request.reviewerName ?? "Unknown reviewer"
+        } / reviewed: ${request.reviewedAtLabel ?? "-"}`,
+      ]),
+    ]);
+  };
 
   return (
     <>
@@ -238,6 +332,29 @@ export function PermissionRequestsWorkspace({
                 className="rounded-xl pl-9"
               />
             </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-xl"
+              onClick={exportVisibleRequests}
+              disabled={!filteredRequests.length}
+              data-testid="export-visible-permission-requests"
+            >
+              <Download className="size-4" />
+              Export visible CSV
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-xl"
+              onClick={exportSummaryReport}
+              data-testid="export-permission-request-summary"
+            >
+              <Download className="size-4" />
+              Export summary CSV
+            </Button>
           </div>
           <div className="flex flex-wrap gap-2">
             {[

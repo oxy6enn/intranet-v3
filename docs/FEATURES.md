@@ -107,6 +107,8 @@
 
 - [x] search keyword
 - [x] filter `all / pending / approved / rejected`
+- [x] export visible CSV
+- [x] export summary CSV
 
 ## UI / UX Foundation
 
@@ -128,7 +130,7 @@
 
 ## Recommended Next Features
 
-- [ ] export / reporting สำหรับ admin
+- [x] export / reporting สำหรับ permission request inbox
 - [ ] advanced filters เช่น date range
 - [ ] audit/reporting เชิงลึก
 - [ ] ThaiD prep / implementation

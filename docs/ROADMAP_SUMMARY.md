@@ -23,10 +23,10 @@
 - [x] Notification center
 - [x] Activity log
 - [x] Search / filters for ops views
+- [x] Export / reporting for permission request inbox
 
 ## Next Recommended Work
 
-- [ ] Export / reporting
 - [ ] Advanced filters เช่น date range
 - [ ] Audit / reporting เชิงลึก
 - [ ] ThaiD prep / implementation
