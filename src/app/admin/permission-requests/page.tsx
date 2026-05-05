@@ -1,10 +1,15 @@
+import { AdminWorkspaceShell } from "@/components/admin/admin-workspace-shell";
 import { PermissionRequestsWorkspace } from "@/components/admin/permission-requests-workspace";
 import { requirePermissionSession } from "@/lib/auth-guards";
 import { PERMISSION_CODES } from "@/lib/permission-codes";
 import { prisma } from "@/lib/prisma";
+import { getWorkspaceShellData } from "@/lib/workspace-shell-data";
 
 export default async function AdminPermissionRequestsPage() {
-  await requirePermissionSession(PERMISSION_CODES.PERMISSION_MANAGE);
+  const session = await requirePermissionSession(
+    PERMISSION_CODES.PERMISSION_MANAGE
+  );
+  const workspace = await getWorkspaceShellData(session.user);
 
   const requests = await prisma.permissionRequest.findMany({
     orderBy: [{ status: "asc" }, { createdAt: "desc" }],
@@ -31,7 +36,7 @@ export default async function AdminPermissionRequestsPage() {
   });
 
   return (
-    <main className="min-h-screen bg-muted/40 px-6 py-10 text-foreground">
+    <AdminWorkspaceShell workspace={workspace}>
       <div className="mx-auto max-w-7xl space-y-6">
         <div className="space-y-2">
           <p className="text-sm font-medium text-muted-foreground">
@@ -81,6 +86,6 @@ export default async function AdminPermissionRequestsPage() {
           }))}
         />
       </div>
-    </main>
+    </AdminWorkspaceShell>
   );
 }

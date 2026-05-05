@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
+import { AdminWorkspaceShell } from "@/components/admin/admin-workspace-shell";
 import { UserPermissionsForm } from "@/components/admin/user-permissions-form";
 import { requirePermissionSession } from "@/lib/auth-guards";
 import { PERMISSION_CODES } from "@/lib/permission-codes";
 import { prisma } from "@/lib/prisma";
+import { getWorkspaceShellData } from "@/lib/workspace-shell-data";
 
 type Params = {
   params: Promise<{
@@ -11,7 +13,10 @@ type Params = {
 };
 
 export default async function UserPermissionsPage({ params }: Params) {
-  await requirePermissionSession(PERMISSION_CODES.PERMISSION_MANAGE);
+  const session = await requirePermissionSession(
+    PERMISSION_CODES.PERMISSION_MANAGE
+  );
+  const workspace = await getWorkspaceShellData(session.user);
   const { id } = await params;
 
   const [user, permissions, assignedPermissions] = await Promise.all([
@@ -51,7 +56,7 @@ export default async function UserPermissionsPage({ params }: Params) {
   }
 
   return (
-    <main className="min-h-screen bg-muted/40 px-6 py-10 text-foreground">
+    <AdminWorkspaceShell workspace={workspace}>
       <div className="mx-auto max-w-5xl space-y-6">
         <div className="space-y-2">
           <p className="text-sm font-medium text-muted-foreground">
@@ -72,6 +77,6 @@ export default async function UserPermissionsPage({ params }: Params) {
           )}
         />
       </div>
-    </main>
+    </AdminWorkspaceShell>
   );
 }

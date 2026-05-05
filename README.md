@@ -60,6 +60,7 @@ npm run test:e2e
 - notification center
 - activity log
 - search / filters ในหน้า operation หลัก
+- shared workspace shell for both user and admin pages
 
 ดูรายการ feature ล่าสุดแบบอ่านเร็วได้ที่:
 

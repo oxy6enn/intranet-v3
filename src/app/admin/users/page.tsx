@@ -9,13 +9,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AdminWorkspaceShell } from "@/components/admin/admin-workspace-shell";
 import { requirePermissionSession } from "@/lib/auth-guards";
 import { PERMISSION_CODES } from "@/lib/permission-codes";
 import { prisma } from "@/lib/prisma";
 import { cn } from "@/lib/utils";
+import { getWorkspaceShellData } from "@/lib/workspace-shell-data";
 
 export default async function AdminUsersPage() {
-  await requirePermissionSession(PERMISSION_CODES.PERMISSION_MANAGE);
+  const session = await requirePermissionSession(
+    PERMISSION_CODES.PERMISSION_MANAGE
+  );
+  const workspace = await getWorkspaceShellData(session.user);
 
   const users = await prisma.user.findMany({
     orderBy: {
@@ -44,7 +49,7 @@ export default async function AdminUsersPage() {
   );
 
   return (
-    <main className="min-h-screen bg-muted/40 px-6 py-10 text-foreground">
+    <AdminWorkspaceShell workspace={workspace}>
       <div className="mx-auto max-w-7xl space-y-6">
         <div className="space-y-2">
           <p className="text-sm font-medium text-muted-foreground">
@@ -54,17 +59,17 @@ export default async function AdminUsersPage() {
             Direct user permissions
           </h1>
           <p className="max-w-3xl text-sm leading-7 text-muted-foreground">
-            หน้านี้ใช้เสริมสิทธิ์เฉพาะรายคนผ่าน{" "}
+            Use this view to grant access on a per-user basis through{" "}
             <code className="rounded bg-muted px-1.5 py-0.5 text-foreground">
               UserPermission
             </code>{" "}
-            โดยไม่ต้องเปลี่ยน role หลักของบัญชีนั้น
+            without changing the user&apos;s primary role.
           </p>
         </div>
 
         <section className="grid gap-4 md:grid-cols-3">
           <article className="rounded-3xl border border-border bg-background p-5 shadow-sm">
-            <p className="text-sm text-muted-foreground">ผู้ใช้ทั้งหมด</p>
+            <p className="text-sm text-muted-foreground">Total users</p>
             <p className="mt-3 text-3xl font-semibold tracking-tight">
               {users.length}
             </p>
@@ -73,7 +78,7 @@ export default async function AdminUsersPage() {
             </p>
           </article>
           <article className="rounded-3xl border border-border bg-background p-5 shadow-sm">
-            <p className="text-sm text-muted-foreground">ผู้ใช้ที่ active</p>
+            <p className="text-sm text-muted-foreground">Active users</p>
             <p className="mt-3 text-3xl font-semibold tracking-tight">
               {activeCount}
             </p>
@@ -97,8 +102,8 @@ export default async function AdminUsersPage() {
             <Table>
               <TableHeader className="bg-muted/50">
                 <TableRow>
-                  <TableHead>ชื่อ</TableHead>
-                  <TableHead>อีเมล</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
                   <TableHead>Role</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Direct permissions</TableHead>
@@ -137,7 +142,7 @@ export default async function AdminUsersPage() {
                           "rounded-lg"
                         )}
                       >
-                        จัดสิทธิ์
+                        Manage access
                       </Link>
                     </TableCell>
                   </TableRow>
@@ -147,6 +152,6 @@ export default async function AdminUsersPage() {
           </div>
         </section>
       </div>
-    </main>
+    </AdminWorkspaceShell>
   );
 }

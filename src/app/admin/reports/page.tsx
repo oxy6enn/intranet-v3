@@ -1,10 +1,12 @@
 import { AdminReportsWorkspace } from "@/components/admin/admin-reports-workspace";
+import { AdminWorkspaceShell } from "@/components/admin/admin-workspace-shell";
 import { requirePermissionSession } from "@/lib/auth-guards";
 import { ACTIVITY_EVENT_TYPES } from "@/lib/activity-events";
 import { PERMISSION_REQUEST_STATUS } from "@/lib/permission-request-status";
 import { PERMISSION_CODES } from "@/lib/permission-codes";
 import { prisma } from "@/lib/prisma";
 import { USER_STATUS } from "@/lib/user-status";
+import { getWorkspaceShellData } from "@/lib/workspace-shell-data";
 
 function getDaysAgo(days: number) {
   const reference = new Date();
@@ -13,7 +15,8 @@ function getDaysAgo(days: number) {
 }
 
 export default async function AdminReportsPage() {
-  await requirePermissionSession(PERMISSION_CODES.REPORT_VIEW);
+  const session = await requirePermissionSession(PERMISSION_CODES.REPORT_VIEW);
+  const workspace = await getWorkspaceShellData(session.user);
 
   const last7Days = getDaysAgo(7);
 
@@ -192,7 +195,7 @@ export default async function AdminReportsPage() {
     .slice(0, 5);
 
   return (
-    <main className="min-h-screen bg-muted/40 px-6 py-10 text-foreground">
+    <AdminWorkspaceShell workspace={workspace}>
       <div className="mx-auto max-w-7xl space-y-6">
         <div className="space-y-2">
           <p className="text-sm font-medium text-muted-foreground">
@@ -257,6 +260,6 @@ export default async function AdminReportsPage() {
           }))}
         />
       </div>
-    </main>
+    </AdminWorkspaceShell>
   );
 }

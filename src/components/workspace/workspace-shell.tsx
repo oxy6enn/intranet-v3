@@ -5,16 +5,19 @@ import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import {
   Bell,
+  BriefcaseBusiness,
   ChartColumn,
   Clock3,
   KeySquare,
   LayoutDashboard,
   Menu,
+  Shield,
   Search,
   ShieldAlert,
   ShieldCheck,
   UserCircle2,
   Users,
+  UsersRound,
   X,
 } from "lucide-react";
 import { LogoutButton } from "@/components/auth/logout-button";
@@ -31,6 +34,7 @@ type WorkspaceShellProps = {
   role: string;
   pendingRequestCount: number;
   notificationCount: number;
+  variant?: "user" | "admin";
   children: ReactNode;
 };
 
@@ -56,6 +60,31 @@ const adminNav = [
   },
 ] as const;
 
+const adminWorkspaceNav = [
+  { href: "/admin/employees", label: "Employees", icon: UsersRound },
+  { href: "/admin/permissions", label: "Permissions", icon: Shield },
+  { href: "/admin/users", label: "Users", icon: Users },
+  {
+    href: "/admin/permission-requests",
+    label: "Request inbox",
+    icon: ShieldAlert,
+  },
+  {
+    href: "/admin/reports",
+    label: "Reports",
+    icon: ChartColumn,
+  },
+] as const;
+
+const workspaceLinksForAdmin = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/activity", label: "Activity", icon: Clock3 },
+  { href: "/notifications", label: "Notifications", icon: Bell },
+  { href: "/permissions/request", label: "Permission requests", icon: KeySquare },
+  { href: "/profile", label: "Profile", icon: UserCircle2 },
+  { href: "/profile/security", label: "Security", icon: ShieldCheck },
+] as const;
+
 function isActiveRoute(pathname: string, href: string) {
   if (href === "/profile") {
     return pathname === "/profile";
@@ -71,11 +100,28 @@ export function WorkspaceShell({
   role,
   pendingRequestCount,
   notificationCount,
+  variant = "user",
   children,
 }: WorkspaceShellProps) {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isAdmin = role === "admin" || role === "super_admin";
+  const isAdminShell = variant === "admin";
+  const primarySections = isAdminShell ? adminWorkspaceNav : primaryNav;
+  const secondarySections = isAdminShell
+    ? workspaceLinksForAdmin
+    : isAdmin
+      ? adminNav
+      : [];
+  const brandTitle = isAdminShell ? "Intranet Admin" : "Intranet Kit";
+  const brandSubtitle = isAdminShell
+    ? "Operations workspace"
+    : "Workspace navigation";
+  const primarySectionLabel = isAdminShell ? "Admin" : "Navigation";
+  const secondarySectionLabel = isAdminShell ? "Workspace" : "Admin";
+  const searchPlaceholder = isAdminShell
+    ? "Search employees, permissions, requests, reports..."
+    : "Search users, permissions, requests, reports...";
 
   return (
     <main className="min-h-screen bg-muted/40 text-foreground">
@@ -84,11 +130,15 @@ export function WorkspaceShell({
           <div className="border-b border-border px-6 py-6">
             <div className="flex items-center gap-3">
               <div className="flex size-11 items-center justify-center rounded-2xl border border-border bg-card">
-                <LayoutDashboard className="size-5" />
+                {isAdminShell ? (
+                  <BriefcaseBusiness className="size-5" />
+                ) : (
+                  <LayoutDashboard className="size-5" />
+                )}
               </div>
               <div>
-                <p className="font-semibold">Intranet Kit</p>
-                <p className="text-sm text-muted-foreground">Workspace navigation</p>
+                <p className="font-semibold">{brandTitle}</p>
+                <p className="text-sm text-muted-foreground">{brandSubtitle}</p>
               </div>
             </div>
           </div>
@@ -96,9 +146,9 @@ export function WorkspaceShell({
           <div className="flex-1 space-y-8 overflow-y-auto px-4 py-6">
             <section className="space-y-2">
               <p className="px-3 text-xs font-medium uppercase tracking-[0.24em] text-muted-foreground">
-                Navigation
+                {primarySectionLabel}
               </p>
-              {primaryNav.map(({ href, label, icon: Icon }) => {
+              {primarySections.map(({ href, label, icon: Icon }) => {
                 const active = isActiveRoute(pathname, href);
 
                 return (
@@ -117,12 +167,12 @@ export function WorkspaceShell({
               })}
             </section>
 
-            {isAdmin ? (
+            {secondarySections.length ? (
               <section className="space-y-2">
                 <p className="px-3 text-xs font-medium uppercase tracking-[0.24em] text-muted-foreground">
-                  Admin
+                  {secondarySectionLabel}
                 </p>
-                {adminNav.map(({ href, label, icon: Icon }) => {
+                {secondarySections.map(({ href, label, icon: Icon }) => {
                   const active = isActiveRoute(pathname, href);
 
                   return (
@@ -137,8 +187,8 @@ export function WorkspaceShell({
                       <Icon className="size-4" />
                       <span>{label}</span>
                     </Link>
-                  );
-                })}
+                    );
+                  })}
               </section>
             ) : null}
 
@@ -196,7 +246,7 @@ export function WorkspaceShell({
                   <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     aria-label="Search workspace"
-                    placeholder="Search users, permissions, requests, reports..."
+                    placeholder={searchPlaceholder}
                     className="h-11 rounded-2xl pl-9"
                   />
                 </div>
@@ -226,7 +276,7 @@ export function WorkspaceShell({
             {isMenuOpen ? (
               <div className="space-y-3 border-t border-border px-4 py-4 lg:hidden">
                 <div className="grid gap-2">
-                  {primaryNav.map(({ href, label, icon: Icon }) => {
+                  {primarySections.map(({ href, label, icon: Icon }) => {
                     const active = isActiveRoute(pathname, href);
 
                     return (
@@ -241,11 +291,11 @@ export function WorkspaceShell({
                       >
                         <Icon className="size-4" />
                         <span>{label}</span>
-                      </Link>
-                    );
+                        </Link>
+                      );
                   })}
-                  {isAdmin
-                    ? adminNav.map(({ href, label, icon: Icon }) => {
+                  {secondarySections.length
+                    ? secondarySections.map(({ href, label, icon: Icon }) => {
                         const active = isActiveRoute(pathname, href);
 
                         return (

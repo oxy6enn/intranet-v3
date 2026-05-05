@@ -81,15 +81,15 @@ export function UserPermissionsForm({
       const payload = (await response.json()) as UpdateUserPermissionsResponse;
 
       if (!response.ok) {
-        toast.error("อัปเดตสิทธิ์ไม่สำเร็จ", {
+        toast.error("Could not update permissions", {
           description:
-            payload.message ?? "เกิดข้อผิดพลาดระหว่างบันทึกสิทธิ์",
+            payload.message ?? "Something went wrong while saving permissions.",
         });
         return;
       }
 
-      toast.success("อัปเดตสิทธิ์สำเร็จ", {
-        description: "สิทธิ์รายคนของผู้ใช้นี้ถูกอัปเดตแล้ว",
+      toast.success("Permissions updated", {
+        description: "The user's direct permissions have been saved.",
       });
       router.refresh();
     });
@@ -103,7 +103,8 @@ export function UserPermissionsForm({
           <Badge variant="outline">{userName}</Badge>
         </div>
         <CardDescription>
-          {userEmail} | เลือกเฉพาะ permission รายคนที่ต้องการเสริมเพิ่มจาก role หลัก
+          {userEmail} | Choose only the extra permissions this user needs beyond
+          the base role.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -129,7 +130,7 @@ export function UserPermissionsForm({
                       {permission.code}
                     </span>
                     <span className="block">
-                      {permission.description || "ไม่มีคำอธิบายเพิ่มเติม"}
+                      {permission.description || "No additional description provided."}
                     </span>
                   </FieldDescription>
                 </FieldContent>
@@ -137,7 +138,8 @@ export function UserPermissionsForm({
             ))
           ) : (
             <p className="text-sm text-muted-foreground">
-              ยังไม่มี permission ในระบบ กรุณาสร้าง permission ก่อน
+              No permissions exist yet. Create permission codes before assigning
+              them to users.
             </p>
           )}
         </FieldGroup>

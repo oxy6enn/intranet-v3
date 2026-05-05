@@ -27,6 +27,7 @@
 - [x] Advanced date range filters for permission request inbox
 - [x] Activity audit exports and date range filters
 - [x] Admin reports and cross-view summaries
+- [x] Unified admin workspace shell and active navigation
 
 ## Next Recommended Work
 

@@ -108,21 +108,22 @@ export function EmployeeForm({
       const payload = (await response.json()) as EmployeeMutationResponse;
 
       if (!response.ok) {
-        const message = payload.message ?? "ไม่สามารถบันทึกข้อมูลพนักงานได้";
+        const message =
+          payload.message ?? "Unable to save the employee record right now.";
         setSubmitError(message);
-        toast.error("บันทึกข้อมูลไม่สำเร็จ", {
+        toast.error("Could not save employee", {
           description: message,
         });
         return;
       }
 
       toast.success(
-        mode === "create" ? "สร้างพนักงานสำเร็จ" : "อัปเดตพนักงานสำเร็จ",
+        mode === "create" ? "Employee created" : "Employee updated",
         {
           description:
             mode === "create"
-              ? "ข้อมูลพนักงานถูกเพิ่มเข้าระบบแล้ว"
-              : "ข้อมูลพนักงานถูกอัปเดตแล้ว",
+              ? "The employee record is now available for the identify flow."
+              : "The employee record has been updated successfully.",
         }
       );
 
@@ -139,14 +140,14 @@ export function EmployeeForm({
         </CardTitle>
         <CardDescription>
           {mode === "create"
-            ? "เตรียม employee identity สำหรับ flow identify ก่อนที่ผู้ใช้จะมา claim บัญชีด้วยตนเอง"
-            : "แก้ไขข้อมูล employee และ reset temporary password ได้จากหน้านี้"}
+            ? "Prepare an employee identity before the user claims the account through the identify flow."
+            : "Update employee details or reset the temporary password from this screen."}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {submitError ? (
           <Alert variant="destructive">
-            <AlertTitle>บันทึกข้อมูลไม่สำเร็จ</AlertTitle>
+            <AlertTitle>Could not save employee</AlertTitle>
             <AlertDescription>{submitError}</AlertDescription>
           </Alert>
         ) : null}
@@ -198,8 +199,8 @@ export function EmployeeForm({
                     type="text"
                     placeholder={
                       mode === "create"
-                        ? "กำหนดหรือ generate รหัสผ่านชั่วคราว"
-                        : "เว้นว่างได้ถ้าไม่ต้องการ reset"
+                        ? "Enter or generate a temporary password"
+                        : "Leave blank if you do not need to reset it"
                     }
                     {...form.register("temporaryPassword")}
                   />
@@ -219,8 +220,8 @@ export function EmployeeForm({
                 </div>
                 <FieldDescription>
                   {mode === "create"
-                    ? "รหัสนี้จะถูก hash ก่อนบันทึกลงฐานข้อมูล"
-                    : "ถ้ากรอกค่าใหม่ ระบบจะถือว่าเป็นการ reset temporary password"}
+                    ? "The password will be hashed before it is stored."
+                    : "If you provide a new value, the system will treat it as a temporary password reset."}
                 </FieldDescription>
                 <FieldError errors={[form.formState.errors.temporaryPassword]} />
               </FieldContent>
@@ -237,7 +238,7 @@ export function EmployeeForm({
                   {...form.register("tempPasswordExpiresAt")}
                 />
                 <FieldDescription>
-                  เว้นว่างได้ถ้าไม่ต้องการกำหนดวันหมดอายุ
+                  Leave this blank if the temporary password should not expire.
                 </FieldDescription>
                 <FieldError
                   errors={[form.formState.errors.tempPasswordExpiresAt]}

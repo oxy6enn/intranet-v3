@@ -1,12 +1,17 @@
 import { KeySquare, ShieldCheck, UsersRound } from "lucide-react";
+import { AdminWorkspaceShell } from "@/components/admin/admin-workspace-shell";
 import { PermissionForm } from "@/components/admin/permission-form";
 import { PermissionsTable } from "@/components/admin/permissions-table";
 import { requirePermissionSession } from "@/lib/auth-guards";
 import { PERMISSION_CODES } from "@/lib/permission-codes";
 import { prisma } from "@/lib/prisma";
+import { getWorkspaceShellData } from "@/lib/workspace-shell-data";
 
 export default async function AdminPermissionsPage() {
-  await requirePermissionSession(PERMISSION_CODES.PERMISSION_MANAGE);
+  const session = await requirePermissionSession(
+    PERMISSION_CODES.PERMISSION_MANAGE
+  );
+  const workspace = await getWorkspaceShellData(session.user);
 
   const permissions = await prisma.permission.findMany({
     orderBy: {
@@ -39,27 +44,27 @@ export default async function AdminPermissionsPage() {
 
   const stats = [
     {
-      label: "Permissions ทั้งหมด",
+      label: "Total permissions",
       value: permissions.length,
       helper: "available permission codes",
       icon: ShieldCheck,
     },
     {
-      label: "ถูกใช้งานแล้ว",
+      label: "Assigned permissions",
       value: assignedPermissionsCount,
       helper: "permissions linked to at least one user",
       icon: KeySquare,
     },
     {
-      label: "จำนวนการ assign",
+      label: "Direct assignments",
       value: totalAssignments,
-      helper: "total direct user-permission relationships",
+      helper: "total user-to-permission relationships",
       icon: UsersRound,
     },
   ];
 
   return (
-    <main className="min-h-screen bg-muted/40 px-6 py-10 text-foreground">
+    <AdminWorkspaceShell workspace={workspace}>
       <div className="mx-auto grid max-w-7xl gap-6 xl:grid-cols-[1.2fr_0.8fr]">
         <section className="space-y-6">
           <div className="space-y-2">
@@ -70,8 +75,8 @@ export default async function AdminPermissionsPage() {
               Permission catalog
             </h1>
             <p className="max-w-3xl text-sm leading-7 text-muted-foreground">
-              ใช้เก็บ code กลางของระบบ authorization เพื่อให้ role และ direct
-              permissions อ้างอิงชุดคำสั่งเดียวกันอย่างเป็นระบบ
+              Manage the central permission codes used by roles, direct user
+              assignments, request approvals, and reporting across the system.
             </p>
           </div>
 
@@ -104,6 +109,6 @@ export default async function AdminPermissionsPage() {
 
         <PermissionForm />
       </div>
-    </main>
+    </AdminWorkspaceShell>
   );
 }

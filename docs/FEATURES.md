@@ -125,6 +125,7 @@
 - [x] loading state
 - [x] not-found page
 - [x] shared workspace shell for user-side pages
+- [x] shared workspace shell for admin-side pages
 - [x] Thai font base ด้วย `Anuphan`
 - [x] English-friendly fallback ด้วย `Inter`
 

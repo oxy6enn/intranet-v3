@@ -577,6 +577,40 @@ Checklist หลังทำเสร็จ:
 
 ---
 
+## Lesson Add-on: Unified Admin Workspace Shell
+
+เป้าหมาย:
+
+- ทำให้หน้า admin ใช้ shell เดียวกันแบบเดียวกับฝั่ง user
+- ให้เมนู active ตาม route ปัจจุบัน และ content อยู่ฝั่งขวาแบบคงที่
+
+สิ่งที่ทำ:
+
+- ขยาย `WorkspaceShell` ให้รองรับ `variant="admin"`
+- แยก navigation ของ admin ออกเป็น:
+  - `Employees`
+  - `Permissions`
+  - `Users`
+  - `Request inbox`
+  - `Reports`
+- ย้ายหน้า admin หลักและหน้า form เข้า shell เดียวกัน:
+  - `/admin/employees`
+  - `/admin/employees/create`
+  - `/admin/employees/[id]/edit`
+  - `/admin/permissions`
+  - `/admin/users`
+  - `/admin/users/[id]/permissions`
+  - `/admin/permission-requests`
+  - `/admin/reports`
+
+สิ่งที่ได้เรียนรู้:
+
+- ถ้ามี shell กลางตัวเดียว การเปลี่ยน topbar, active nav, และ responsive menu จะเบากว่าการดูแลหลาย layout
+- การ reuse shell เดิมด้วย `variant` มักปลอดภัยกว่าสร้าง shell ใหม่อีกชุด
+- การเก็บ `data-testid` เดิมไว้ช่วยให้ refactor navigation ขนาดใหญ่ไม่ทำให้ e2e แตกง่าย
+
+---
+
 ## Lesson Add-on: Admin Request Insights
 
 เป้าหมาย:

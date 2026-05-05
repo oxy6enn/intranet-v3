@@ -1,14 +1,17 @@
 import Link from "next/link";
 import { Building2, KeyRound, Plus, UsersRound } from "lucide-react";
+import { AdminWorkspaceShell } from "@/components/admin/admin-workspace-shell";
 import { EmployeesTable } from "@/components/admin/employees-table";
 import { buttonVariants } from "@/components/ui/button";
 import { requirePermissionSession } from "@/lib/auth-guards";
 import { PERMISSION_CODES } from "@/lib/permission-codes";
 import { prisma } from "@/lib/prisma";
 import { cn } from "@/lib/utils";
+import { getWorkspaceShellData } from "@/lib/workspace-shell-data";
 
 export default async function AdminEmployeesPage() {
-  await requirePermissionSession(PERMISSION_CODES.EMPLOYEE_VIEW);
+  const session = await requirePermissionSession(PERMISSION_CODES.EMPLOYEE_VIEW);
+  const workspace = await getWorkspaceShellData(session.user);
 
   const employees = await prisma.employee.findMany({
     orderBy: {
@@ -42,25 +45,25 @@ export default async function AdminEmployeesPage() {
 
   const stats = [
     {
-      label: "พนักงานทั้งหมด",
+      label: "Total employees",
       value: employees.length,
       helper: "records available for identify flow",
       icon: UsersRound,
     },
     {
-      label: "ถูกผูกบัญชีแล้ว",
+      label: "Already claimed",
       value: claimedCount,
       helper: "employees already claimed by users",
       icon: Building2,
     },
     {
-      label: "รอยืนยันตัวตน",
+      label: "Waiting to identify",
       value: waitingCount,
       helper: "records still waiting to be claimed",
       icon: KeyRound,
     },
     {
-      label: "จำนวนหน่วยงาน",
+      label: "Departments",
       value: departmentCount,
       helper: "distinct departments in this directory",
       icon: Building2,
@@ -68,7 +71,7 @@ export default async function AdminEmployeesPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-muted/40 px-6 py-10 text-foreground">
+    <AdminWorkspaceShell workspace={workspace}>
       <div className="mx-auto flex max-w-7xl flex-col gap-6">
         <div className="space-y-2">
           <p className="text-sm font-medium text-muted-foreground">
@@ -80,15 +83,16 @@ export default async function AdminEmployeesPage() {
                 Employee directory
               </h1>
               <p className="max-w-3xl text-sm leading-7 text-muted-foreground">
-                ชุดข้อมูลนี้คือแหล่งอ้างอิงของ identify flow ผู้ใช้จะนำ{" "}
+                This directory powers the identify flow. Users bring their{" "}
                 <code className="rounded bg-muted px-1.5 py-0.5 text-foreground">
                   employee_code
                 </code>{" "}
-                และ{" "}
+                and{" "}
                 <code className="rounded bg-muted px-1.5 py-0.5 text-foreground">
                   temporary_password
                 </code>{" "}
-                มาเชื่อมบัญชีกับตัวตนพนักงานจริงจากหน้านี้
+                to link their account to a real employee identity from this
+                admin-managed dataset.
               </p>
             </div>
 
@@ -129,6 +133,6 @@ export default async function AdminEmployeesPage() {
           <EmployeesTable data={rows} />
         </section>
       </div>
-    </main>
+    </AdminWorkspaceShell>
   );
 }

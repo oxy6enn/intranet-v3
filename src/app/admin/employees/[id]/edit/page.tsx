@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
+import { AdminWorkspaceShell } from "@/components/admin/admin-workspace-shell";
 import { EmployeeForm } from "@/components/admin/employee-form";
 import { requirePermissionSession } from "@/lib/auth-guards";
 import { PERMISSION_CODES } from "@/lib/permission-codes";
 import { prisma } from "@/lib/prisma";
+import { getWorkspaceShellData } from "@/lib/workspace-shell-data";
 
 type Params = {
   params: Promise<{
@@ -20,7 +22,8 @@ function toDatetimeLocal(value: Date | null) {
 }
 
 export default async function EditEmployeePage({ params }: Params) {
-  await requirePermissionSession(PERMISSION_CODES.EMPLOYEE_UPDATE);
+  const session = await requirePermissionSession(PERMISSION_CODES.EMPLOYEE_UPDATE);
+  const workspace = await getWorkspaceShellData(session.user);
   const { id } = await params;
 
   const employee = await prisma.employee.findUnique({
@@ -34,7 +37,7 @@ export default async function EditEmployeePage({ params }: Params) {
   }
 
   return (
-    <main className="min-h-screen bg-muted/40 px-6 py-10 text-foreground">
+    <AdminWorkspaceShell workspace={workspace}>
       <div className="mx-auto max-w-4xl space-y-6">
         <div className="space-y-2">
           <p className="text-sm font-medium text-muted-foreground">
@@ -57,6 +60,6 @@ export default async function EditEmployeePage({ params }: Params) {
           }}
         />
       </div>
-    </main>
+    </AdminWorkspaceShell>
   );
 }
