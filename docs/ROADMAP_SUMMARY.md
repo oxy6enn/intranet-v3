@@ -1,6 +1,6 @@
 # Roadmap Summary
 
-ไฟล์นี้ใช้สำหรับดูภาพรวม roadmap แบบอ่านเร็ว ก่อนลงไปอ่านรายละเอียดเต็มใน `docs/ROADMAP.md`
+ไฟล์นี้ใช้สำหรับดูภาพรวม roadmap แบบอ่านเร็ว ทั้งในมุม phase หลักและ feature expansion หลังจบ phase พื้นฐาน ก่อนลงไปอ่านรายละเอียดเต็มใน `docs/ROADMAP.md`
 
 ## Completed Phases
 
