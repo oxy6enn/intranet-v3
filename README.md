@@ -8,10 +8,16 @@
 Email/Password → Identify Employee → Active User → Link Social Provider
 ```
 
-## ไฟล์สำคัญ
+## โครงเอกสาร
 
-- `CODEX_STEP_BY_STEP.md` — prompt แบบ step-by-step สำหรับสั่ง Codex
-- `HANDS_ON_LESSONS.md` — แผนจับมือทำทีละบท
+- `README.md` — ภาพรวมโปรเจกต์, สถานะล่าสุด, และภาพรวม feature
+- `docs/ROADMAP.md` — roadmap และ implementation plan แบบ step-by-step
+- `docs/LESSONS.md` — บทเรียน, troubleshooting, และสิ่งที่เรียนรู้ระหว่างพัฒนา
+
+หมายเหตุ:
+
+- ไฟล์เดิม `CODEX_STEP_BY_STEP.md` และ `HANDS_ON_LESSONS.md` ยังอยู่ที่ root ในรูปแบบไฟล์ชี้ทาง เพื่อให้ลิงก์เก่ายังไม่แตก
+- ต่อจากนี้ให้ใช้งานไฟล์ใน `docs/` เป็นแหล่งอ้างอิงหลัก
 
 ## แนวคิดระบบ
 
@@ -121,7 +127,7 @@ if (process.env.NODE_ENV !== "production") {
 เปิดโปรเจกต์ใน VS Code แล้วให้ Codex อ่านไฟล์นี้ก่อน:
 
 ```text
-CODEX_STEP_BY_STEP.md
+docs/ROADMAP.md
 ```
 
 จากนั้นให้ Codex ทำทีละ Phase ห้ามข้าม Phase
