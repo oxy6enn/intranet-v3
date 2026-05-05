@@ -8,7 +8,64 @@
 Email/Password → Identify Employee → Active User → Link Social Provider
 ```
 
-## โครงเอกสาร
+## Quick Start
+
+1. ติดตั้ง dependencies
+
+```bash
+npm install
+```
+
+2. เตรียม environment
+
+```bash
+cp .env.example .env
+```
+
+3. รัน services ที่จำเป็น
+
+```bash
+docker compose up -d
+```
+
+4. รันแอป
+
+```bash
+npm run dev
+```
+
+5. ตรวจคุณภาพก่อนปิดงาน
+
+```bash
+npm run lint
+npm run build
+npm test
+```
+
+ถ้า feature กระทบ flow หลักของระบบ ให้รัน e2e เพิ่ม:
+
+```bash
+npm run test:e2e
+```
+
+## Current Status
+
+ตอนนี้ระบบมี feature หลักพร้อมใช้งานแล้วในระดับ product foundation:
+
+- auth + identify flow
+- role + direct permissions
+- admin employees / permissions / user permissions
+- permission request workflow
+- dashboard real data
+- notification center
+- activity log
+- search / filters ในหน้า operation หลัก
+
+ดูรายการ feature ล่าสุดแบบอ่านเร็วได้ที่:
+
+- `docs/FEATURES.md`
+
+## Docs Map
 
 - `README.md` — ภาพรวมโปรเจกต์, สถานะล่าสุด, และภาพรวม feature
 - `docs/ROADMAP.md` — roadmap และ implementation plan แบบ step-by-step
@@ -18,6 +75,22 @@ Email/Password → Identify Employee → Active User → Link Social Provider
 - `docs/DECISIONS.md` — architectural decisions และเหตุผลของทางเลือกสำคัญในโปรเจกต์
 
 ต่อจากนี้ให้ใช้งานไฟล์ใน `docs/` เป็นแหล่งอ้างอิงหลักของโปรเจกต์
+
+## ใช้กับ Codex อย่างไร
+
+เปิดโปรเจกต์ใน VS Code แล้วให้ Codex อ่านไฟล์นี้ก่อน:
+
+```text
+docs/ROADMAP.md
+```
+
+จากนั้นให้ Codex ทำทีละ Phase ห้ามข้าม Phase
+
+ถ้าต้องการดู:
+
+- สิ่งที่ระบบทำได้แล้ว ให้เปิด `docs/FEATURES.md`
+- วิธีทดสอบและ coverage ให้เปิด `docs/TESTING.md`
+- เหตุผลของแนวทางที่เลือก ให้เปิด `docs/DECISIONS.md`
 
 ## แนวคิดระบบ
 
@@ -121,16 +194,6 @@ if (process.env.NODE_ENV !== "production") {
 - ฝั่ง client ใช้ `authClient.linkSocial({ provider, callbackURL })`
 - provider อย่าง Google / LINE ควรเปิดใช้แบบ conditional ตาม env
 - ThaiD ในรอบนี้ยังเป็น placeholder เพื่อเตรียมไปสู่ Generic OAuth / OIDC ภายหลัง
-
-## ใช้กับ Codex อย่างไร
-
-เปิดโปรเจกต์ใน VS Code แล้วให้ Codex อ่านไฟล์นี้ก่อน:
-
-```text
-docs/ROADMAP.md
-```
-
-จากนั้นให้ Codex ทำทีละ Phase ห้ามข้าม Phase
 
 ## Flow Update: Register / Login / Identify
 
