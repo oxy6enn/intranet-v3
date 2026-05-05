@@ -43,6 +43,7 @@ export default async function ActivityPage() {
         entityType: event.entityType,
         title: event.title,
         description: event.description,
+        createdAtIso: event.createdAt.toISOString(),
         createdAtLabel: event.createdAt.toLocaleString("en-US", {
           year: "numeric",
           month: "short",

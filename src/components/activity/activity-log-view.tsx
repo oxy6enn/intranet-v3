@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useDeferredValue, useMemo, useState } from "react";
-import { Clock3, Search, ShieldCheck, UserCircle2 } from "lucide-react";
+import { Clock3, Download, Search, ShieldCheck, UserCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants, Button } from "@/components/ui/button";
 import {
@@ -23,6 +23,7 @@ type ActivityEventItem = {
   entityType: string | null;
   title: string;
   description: string;
+  createdAtIso: string;
   createdAtLabel: string;
 };
 
@@ -33,6 +34,32 @@ type ActivityLogViewProps = {
 };
 
 type EventFilter = "all" | "identify" | "request";
+type DateRangeFilter = "all" | "last7" | "last30" | "last90" | "custom";
+
+function escapeCsvValue(value: string) {
+  const normalizedValue = value.replaceAll('"', '""');
+  return `"${normalizedValue}"`;
+}
+
+function downloadCsvFile(filename: string, rows: string[][]) {
+  const csvContent = rows
+    .map((row) => row.map((cell) => escapeCsvValue(cell)).join(","))
+    .join("\n");
+
+  const blob = new Blob([csvContent], {
+    type: "text/csv;charset=utf-8;",
+  });
+
+  const objectUrl = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = objectUrl;
+  link.download = filename;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(objectUrl);
+}
 
 export function ActivityLogView({
   isAdmin,
@@ -41,10 +68,24 @@ export function ActivityLogView({
 }: ActivityLogViewProps) {
   const [query, setQuery] = useState("");
   const [eventFilter, setEventFilter] = useState<EventFilter>("all");
+  const [dateRangeFilter, setDateRangeFilter] = useState<DateRangeFilter>("all");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
   const deferredQuery = useDeferredValue(query);
 
   const filteredEvents = useMemo(() => {
     const normalizedQuery = deferredQuery.trim().toLowerCase();
+    const now = new Date();
+    const rangeStart =
+      dateRangeFilter === "last7"
+        ? new Date(now.getTime() - 1000 * 60 * 60 * 24 * 7)
+        : dateRangeFilter === "last30"
+          ? new Date(now.getTime() - 1000 * 60 * 60 * 24 * 30)
+          : dateRangeFilter === "last90"
+            ? new Date(now.getTime() - 1000 * 60 * 60 * 24 * 90)
+            : null;
+    const customStart = fromDate ? new Date(`${fromDate}T00:00:00`) : null;
+    const customEnd = toDate ? new Date(`${toDate}T23:59:59.999`) : null;
 
     return events.filter((event) => {
       const matchesEventFilter =
@@ -56,6 +97,22 @@ export function ActivityLogView({
 
       if (!matchesEventFilter) {
         return false;
+      }
+
+      const createdAt = new Date(event.createdAtIso);
+
+      if (rangeStart && createdAt < rangeStart) {
+        return false;
+      }
+
+      if (dateRangeFilter === "custom") {
+        if (customStart && createdAt < customStart) {
+          return false;
+        }
+
+        if (customEnd && createdAt > customEnd) {
+          return false;
+        }
       }
 
       if (!normalizedQuery) {
@@ -75,7 +132,7 @@ export function ActivityLogView({
 
       return haystack.includes(normalizedQuery);
     });
-  }, [deferredQuery, eventFilter, events]);
+  }, [dateRangeFilter, deferredQuery, eventFilter, events, fromDate, toDate]);
 
   const identifyEvents = filteredEvents.filter(
     (event) => event.eventType === "identify.completed"
@@ -83,6 +140,104 @@ export function ActivityLogView({
   const requestEvents = filteredEvents.filter((event) =>
     event.eventType.startsWith("permission_request.")
   ).length;
+  const topActors = Object.values(
+    filteredEvents.reduce<Record<string, { label: string; count: number }>>(
+      (accumulator, event) => {
+        const label = event.actorName ?? event.subjectName ?? "System";
+
+        if (!accumulator[label]) {
+          accumulator[label] = {
+            label,
+            count: 0,
+          };
+        }
+
+        accumulator[label].count += 1;
+        return accumulator;
+      },
+      {}
+    )
+  )
+    .sort((left, right) => right.count - left.count)
+    .slice(0, 4);
+  const eventTypeBreakdown = Object.values(
+    filteredEvents.reduce<Record<string, { key: string; count: number }>>(
+      (accumulator, event) => {
+        if (!accumulator[event.eventType]) {
+          accumulator[event.eventType] = {
+            key: event.eventType,
+            count: 0,
+          };
+        }
+
+        accumulator[event.eventType].count += 1;
+        return accumulator;
+      },
+      {}
+    )
+  ).sort((left, right) => right.count - left.count);
+  const normalizedQuery = deferredQuery.trim();
+  const dateRangeLabel =
+    dateRangeFilter === "all"
+      ? "all dates"
+      : dateRangeFilter === "last7"
+        ? "last 7 days"
+        : dateRangeFilter === "last30"
+          ? "last 30 days"
+          : dateRangeFilter === "last90"
+            ? "last 90 days"
+            : `${fromDate || "any start"} -> ${toDate || "any end"}`;
+
+  const selectDateRangeFilter = (nextFilter: DateRangeFilter) => {
+    setDateRangeFilter(nextFilter);
+
+    if (nextFilter !== "custom") {
+      setFromDate("");
+      setToDate("");
+    }
+  };
+
+  const exportVisibleEvents = () => {
+    downloadCsvFile("activity-events.csv", [
+      [
+        "Created At",
+        "Event Type",
+        "Title",
+        "Description",
+        "Actor",
+        "Subject",
+        "Entity Type",
+      ],
+      ...filteredEvents.map((event) => [
+        event.createdAtLabel,
+        event.eventType,
+        event.title,
+        event.description,
+        event.actorName ?? "",
+        event.subjectName ?? "",
+        event.entityType ?? "",
+      ]),
+    ]);
+  };
+
+  const exportSummary = () => {
+    downloadCsvFile("activity-summary.csv", [
+      ["Metric", "Value"],
+      ["Visible Events", String(filteredEvents.length)],
+      ["Total Events", String(totalEvents)],
+      ["Identify Events", String(identifyEvents)],
+      ["Request Events", String(requestEvents)],
+      ["Event Filter", eventFilter],
+      ["Date Range Filter", dateRangeLabel],
+      ["Search Query", normalizedQuery || "-"],
+      [],
+      ["Event Type", "Count"],
+      ...eventTypeBreakdown.map((item) => [item.key, String(item.count)]),
+      [],
+      ["Top Actors", "Count"],
+      ...topActors.map((item) => [item.label, String(item.count)]),
+    ]);
+  };
 
   return (
     <main className="min-h-screen bg-muted/40 px-6 py-10 text-foreground">
@@ -98,7 +253,7 @@ export function ActivityLogView({
           </p>
         </div>
 
-        <section className="grid gap-4 md:grid-cols-3">
+        <section className="grid gap-4 md:grid-cols-3 xl:grid-cols-4">
           <article className="rounded-3xl border border-border bg-background p-5 shadow-sm">
             <p className="text-sm text-muted-foreground">Visible events</p>
             <p className="mt-3 text-3xl font-semibold tracking-tight">
@@ -126,6 +281,15 @@ export function ActivityLogView({
               permission request and review events tracked
             </p>
           </article>
+          <article className="rounded-3xl border border-border bg-background p-5 shadow-sm">
+            <p className="text-sm text-muted-foreground">Top actor</p>
+            <p className="mt-3 text-lg font-semibold tracking-tight">
+              {topActors[0]?.label ?? "No activity"}
+            </p>
+            <p className="mt-3 text-sm text-muted-foreground">
+              {topActors[0] ? `${topActors[0].count} visible events` : "no actor data"}
+            </p>
+          </article>
         </section>
 
         <Card className="rounded-3xl border-border/80 shadow-sm">
@@ -134,7 +298,7 @@ export function ActivityLogView({
               <div>
                 <CardTitle className="text-2xl">Search and filters</CardTitle>
                 <CardDescription>
-                  Narrow the timeline by event type or search keywords.
+                  Narrow the timeline by event type, date range, or search keywords.
                 </CardDescription>
               </div>
               <div className="relative w-full max-w-md">
@@ -147,6 +311,66 @@ export function ActivityLogView({
                 />
               </div>
             </div>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="rounded-xl"
+                onClick={exportVisibleEvents}
+                disabled={!filteredEvents.length}
+                data-testid="export-visible-activity-events"
+              >
+                <Download className="size-4" />
+                Export visible CSV
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="rounded-xl"
+                onClick={exportSummary}
+                data-testid="export-activity-summary"
+              >
+                <Download className="size-4" />
+                Export summary CSV
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { id: "all", label: "All dates" },
+                { id: "last7", label: "Last 7 days" },
+                { id: "last30", label: "Last 30 days" },
+                { id: "last90", label: "Last 90 days" },
+                { id: "custom", label: "Custom range" },
+              ].map((item) => (
+                <Button
+                  key={item.id}
+                  type="button"
+                  variant={dateRangeFilter === item.id ? "default" : "outline"}
+                  className="rounded-xl"
+                  onClick={() => selectDateRangeFilter(item.id as DateRangeFilter)}
+                >
+                  {item.label}
+                </Button>
+              ))}
+            </div>
+            {dateRangeFilter === "custom" ? (
+              <div className="grid gap-3 md:grid-cols-2">
+                <Input
+                  type="date"
+                  value={fromDate}
+                  onChange={(event) => setFromDate(event.target.value)}
+                  className="rounded-xl"
+                  aria-label="From date"
+                />
+                <Input
+                  type="date"
+                  value={toDate}
+                  onChange={(event) => setToDate(event.target.value)}
+                  className="rounded-xl"
+                  aria-label="To date"
+                />
+              </div>
+            ) : null}
             <div className="flex flex-wrap gap-2">
               {[
                 { id: "all", label: "All events" },
@@ -163,6 +387,12 @@ export function ActivityLogView({
                   {item.label}
                 </Button>
               ))}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="secondary">
+                {filteredEvents.length} visible / {totalEvents} total events
+              </Badge>
+              <Badge variant="secondary">{dateRangeLabel}</Badge>
             </div>
           </CardHeader>
         </Card>
@@ -218,64 +448,111 @@ export function ActivityLogView({
 
           <Card className="rounded-3xl border-border/80 shadow-sm">
             <CardHeader>
-              <CardTitle className="text-2xl">Related routes</CardTitle>
+              <CardTitle className="text-2xl">Audit summary</CardTitle>
               <CardDescription>
-                Jump quickly between the core workflow and its audit trail.
+                Quick reporting and route shortcuts from the current activity set.
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-3">
-              <Link
-                href="/dashboard"
-                className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  "justify-start rounded-xl"
+            <CardContent className="space-y-6">
+              <div className="space-y-3">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Event type breakdown
+                </p>
+                {eventTypeBreakdown.length ? (
+                  eventTypeBreakdown.slice(0, 5).map((item) => (
+                    <div
+                      key={item.key}
+                      className="flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-3"
+                    >
+                      <p className="text-sm font-medium">{item.key}</p>
+                      <Badge variant="secondary">{item.count}</Badge>
+                    </div>
+                  ))
+                ) : (
+                  <div className="rounded-2xl border border-dashed border-border bg-card p-4 text-sm text-muted-foreground">
+                    No event matches the current filter.
+                  </div>
                 )}
-              >
-                <Clock3 className="size-4" />
-                Back to dashboard
-              </Link>
-              <Link
-                href="/notifications"
-                className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  "justify-start rounded-xl"
+              </div>
+
+              <div className="space-y-3">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Top actors
+                </p>
+                {topActors.length ? (
+                  topActors.map((item) => (
+                    <div
+                      key={item.label}
+                      className="flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-3"
+                    >
+                      <p className="text-sm font-medium">{item.label}</p>
+                      <Badge variant="outline">{item.count} events</Badge>
+                    </div>
+                  ))
+                ) : (
+                  <div className="rounded-2xl border border-dashed border-border bg-card p-4 text-sm text-muted-foreground">
+                    No actor insight matches the current filter.
+                  </div>
                 )}
-              >
-                <ShieldCheck className="size-4" />
-                Notification center
-              </Link>
-              <Link
-                href="/permissions/request"
-                className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  "justify-start rounded-xl"
-                )}
-              >
-                <ShieldCheck className="size-4" />
-                Permission requests
-              </Link>
-              <Link
-                href="/profile"
-                className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  "justify-start rounded-xl"
-                )}
-              >
-                <UserCircle2 className="size-4" />
-                Profile details
-              </Link>
-              {isAdmin ? (
+              </div>
+
+              <div className="grid gap-3">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Related routes
+                </p>
                 <Link
-                  href="/admin/permission-requests"
+                  href="/dashboard"
+                  className={cn(
+                    buttonVariants({ variant: "outline" }),
+                    "justify-start rounded-xl"
+                  )}
+                >
+                  <Clock3 className="size-4" />
+                  Back to dashboard
+                </Link>
+                <Link
+                  href="/notifications"
                   className={cn(
                     buttonVariants({ variant: "outline" }),
                     "justify-start rounded-xl"
                   )}
                 >
                   <ShieldCheck className="size-4" />
-                  Admin request inbox
+                  Notification center
                 </Link>
-              ) : null}
+                <Link
+                  href="/permissions/request"
+                  className={cn(
+                    buttonVariants({ variant: "outline" }),
+                    "justify-start rounded-xl"
+                  )}
+                >
+                  <ShieldCheck className="size-4" />
+                  Permission requests
+                </Link>
+                <Link
+                  href="/profile"
+                  className={cn(
+                    buttonVariants({ variant: "outline" }),
+                    "justify-start rounded-xl"
+                  )}
+                >
+                  <UserCircle2 className="size-4" />
+                  Profile details
+                </Link>
+                {isAdmin ? (
+                  <Link
+                    href="/admin/permission-requests"
+                    className={cn(
+                      buttonVariants({ variant: "outline" }),
+                      "justify-start rounded-xl"
+                    )}
+                  >
+                    <ShieldCheck className="size-4" />
+                    Admin request inbox
+                  </Link>
+                ) : null}
+              </div>
             </CardContent>
           </Card>
         </div>

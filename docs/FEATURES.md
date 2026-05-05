@@ -13,8 +13,8 @@
 - [x] Notification center
 - [x] Activity log
 - [x] Search / filters ในหน้า operation หลัก
-- [ ] Export / reporting
-- [ ] Advanced date range filters
+- [x] Export / reporting
+- [x] Advanced date range filters
 - [ ] ThaiD implementation
 
 ## Core Platform
@@ -88,6 +88,7 @@
 
 - [x] Notification center
 - [x] Activity log timeline
+- [x] Activity export reporting
 - [x] dashboard snapshot จากข้อมูลจริง
 - [x] admin insights สำหรับ permission requests
 
@@ -97,6 +98,9 @@
 
 - [x] search keyword
 - [x] filter `all / identify / request`
+- [x] date range filter `all / 7d / 30d / 90d / custom`
+- [x] export visible CSV
+- [x] export summary CSV
 
 ### `/notifications`
 
