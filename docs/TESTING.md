@@ -154,6 +154,14 @@ npm run test:e2e:headed
 - ถ้า export อิงข้อมูลจาก filtered view ให้เช็กว่าปุ่ม export ใช้ชุดข้อมูลเดียวกับที่ render บนหน้าจอ
 - ถ้ายังไม่มี e2e ครอบ download behavior โดยตรง ให้บันทึกไว้ใน docs ว่า verification หลักของรอบนั้นอยู่ที่ UI logic และ manual browser check
 
+### Date range filters
+
+ถ้ามี advanced filters เช่น date range:
+
+- ให้ตรวจว่า summary cards เปลี่ยนตาม filtered result จริง
+- ให้ตรวจว่า export summary ใช้ค่า filter เดียวกับที่ UI แสดง
+- ถ้าใช้ `type="date"` แบบ client-side ให้ระวังเรื่องขอบเขตเวลา `00:00:00` และ `23:59:59.999`
+
 ## Recommended Verification Order
 
 เวลาปิดงานแต่ละ feature แนะนำให้เช็กตามลำดับนี้:

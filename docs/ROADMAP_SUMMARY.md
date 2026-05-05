@@ -24,10 +24,10 @@
 - [x] Activity log
 - [x] Search / filters for ops views
 - [x] Export / reporting for permission request inbox
+- [x] Advanced date range filters for permission request inbox
 
 ## Next Recommended Work
 
-- [ ] Advanced filters เช่น date range
 - [ ] Audit / reporting เชิงลึก
 - [ ] ThaiD prep / implementation
 

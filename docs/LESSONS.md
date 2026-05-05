@@ -686,3 +686,24 @@ Checklist หลังทำเสร็จ:
 - เมื่อไรที่ client-side CSV export เพียงพอ
 - วิธี reuse filtered state เดิมให้เกิด feature ใหม่โดยไม่เพิ่ม API ก่อนเวลาอันควร
 
+---
+
+## Lesson Add-on: Advanced Filters
+
+เป้าหมาย:
+
+- ทำให้หน้าที่มีข้อมูลจริงใช้งานแบบ operational มากขึ้น ไม่ใช่แค่ search keyword อย่างเดียว
+
+สิ่งที่ควรมี:
+
+- date range presets
+- custom from/to date
+- summary cards ที่คำนวณจาก filtered result
+- export/reporting ที่อิง filter เดียวกับหน้าจอ
+
+สิ่งที่ควรเรียนรู้จากรอบนี้:
+
+- การออกแบบ filter ที่ต่อยอดจากของเดิมโดยไม่รื้อทั้งหน้า
+- ความต่างระหว่าง `search`, `status filter`, และ `date filter`
+- การระวัง bug จาก timezone และขอบเขตวันเวลา
+

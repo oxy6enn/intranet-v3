@@ -23,7 +23,9 @@ type PermissionRequestWorkspaceRow = {
   permissionName: string;
   reason: string;
   status: string;
+  createdAtIso: string;
   createdAtLabel: string;
+  reviewedAtIso: string | null;
   reviewedAtLabel: string | null;
   reviewNote: string | null;
 };
@@ -56,6 +58,7 @@ type PermissionRequestsWorkspaceProps = {
 };
 
 type RequestStatusFilter = "all" | "pending" | "approved" | "rejected";
+type DateRangeFilter = "all" | "last7" | "last30" | "last90" | "custom";
 
 function escapeCsvValue(value: string) {
   const normalizedValue = value.replaceAll('"', '""');
@@ -131,14 +134,17 @@ function buildLatestReviewedRequests(
   requests: PermissionRequestWorkspaceRow[]
 ): ReviewActivityItem[] {
   return requests
-    .filter((request) => request.reviewedAtLabel)
+    .filter((request) => request.reviewedAtIso)
     .slice()
     .sort((left, right) => {
-      if (!left.reviewedAtLabel || !right.reviewedAtLabel) {
+      if (!left.reviewedAtIso || !right.reviewedAtIso) {
         return 0;
       }
 
-      return right.reviewedAtLabel.localeCompare(left.reviewedAtLabel);
+      return (
+        new Date(right.reviewedAtIso).getTime() -
+        new Date(left.reviewedAtIso).getTime()
+      );
     })
     .slice(0, 5)
     .map((request) => ({
@@ -158,14 +164,46 @@ export function PermissionRequestsWorkspace({
 }: PermissionRequestsWorkspaceProps) {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<RequestStatusFilter>("all");
+  const [dateRangeFilter, setDateRangeFilter] = useState<DateRangeFilter>("all");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
   const deferredQuery = useDeferredValue(query);
 
   const filteredRequests = useMemo(() => {
     const normalizedQuery = deferredQuery.trim().toLowerCase();
+    const now = new Date();
+
+    const rangeStart =
+      dateRangeFilter === "last7"
+        ? new Date(now.getTime() - 1000 * 60 * 60 * 24 * 7)
+        : dateRangeFilter === "last30"
+          ? new Date(now.getTime() - 1000 * 60 * 60 * 24 * 30)
+          : dateRangeFilter === "last90"
+            ? new Date(now.getTime() - 1000 * 60 * 60 * 24 * 90)
+            : null;
+
+    const customStart = fromDate ? new Date(`${fromDate}T00:00:00`) : null;
+    const customEnd = toDate ? new Date(`${toDate}T23:59:59.999`) : null;
 
     return requests.filter((request) => {
       if (statusFilter !== "all" && request.status !== statusFilter) {
         return false;
+      }
+
+      const createdAt = new Date(request.createdAtIso);
+
+      if (rangeStart && createdAt < rangeStart) {
+        return false;
+      }
+
+      if (dateRangeFilter === "custom") {
+        if (customStart && createdAt < customStart) {
+          return false;
+        }
+
+        if (customEnd && createdAt > customEnd) {
+          return false;
+        }
       }
 
       if (!normalizedQuery) {
@@ -186,7 +224,7 @@ export function PermissionRequestsWorkspace({
         .toLowerCase()
         .includes(normalizedQuery);
     });
-  }, [deferredQuery, requests, statusFilter]);
+  }, [dateRangeFilter, deferredQuery, fromDate, requests, statusFilter, toDate]);
 
   const pendingCount = filteredRequests.filter(
     (request) => request.status === "pending"
@@ -204,6 +242,25 @@ export function PermissionRequestsWorkspace({
   const topRequesters = buildTopRequesters(filteredRequests);
   const latestReviewedRequests = buildLatestReviewedRequests(filteredRequests);
   const normalizedQuery = deferredQuery.trim();
+  const dateRangeLabel =
+    dateRangeFilter === "all"
+      ? "all dates"
+      : dateRangeFilter === "last7"
+        ? "last 7 days"
+        : dateRangeFilter === "last30"
+          ? "last 30 days"
+          : dateRangeFilter === "last90"
+            ? "last 90 days"
+            : `${fromDate || "any start"} -> ${toDate || "any end"}`;
+
+  const selectDateRangeFilter = (nextFilter: DateRangeFilter) => {
+    setDateRangeFilter(nextFilter);
+
+    if (nextFilter !== "custom") {
+      setFromDate("");
+      setToDate("");
+    }
+  };
 
   const exportVisibleRequests = () => {
     const filenameSuffix =
@@ -249,6 +306,7 @@ export function PermissionRequestsWorkspace({
       ["Rejected Requests", String(rejectedCount)],
       ["Approval Rate", `${approvalRate}%`],
       ["Status Filter", statusFilter],
+      ["Date Range Filter", dateRangeLabel],
       ["Search Query", normalizedQuery || "-"],
       [],
       ["Top Requested Permissions", "Request Count"],
@@ -358,6 +416,43 @@ export function PermissionRequestsWorkspace({
           </div>
           <div className="flex flex-wrap gap-2">
             {[
+              { id: "all", label: "All dates" },
+              { id: "last7", label: "Last 7 days" },
+              { id: "last30", label: "Last 30 days" },
+              { id: "last90", label: "Last 90 days" },
+              { id: "custom", label: "Custom range" },
+            ].map((item) => (
+              <Button
+                key={item.id}
+                type="button"
+                variant={dateRangeFilter === item.id ? "default" : "outline"}
+                className="rounded-xl"
+                onClick={() => selectDateRangeFilter(item.id as DateRangeFilter)}
+              >
+                {item.label}
+              </Button>
+            ))}
+          </div>
+          {dateRangeFilter === "custom" ? (
+            <div className="grid gap-3 md:grid-cols-2">
+              <Input
+                type="date"
+                value={fromDate}
+                onChange={(event) => setFromDate(event.target.value)}
+                className="rounded-xl"
+                aria-label="From date"
+              />
+              <Input
+                type="date"
+                value={toDate}
+                onChange={(event) => setToDate(event.target.value)}
+                className="rounded-xl"
+                aria-label="To date"
+              />
+            </div>
+          ) : null}
+          <div className="flex flex-wrap gap-2">
+            {[
               { id: "all", label: "All requests" },
               { id: "pending", label: "Pending" },
               { id: "approved", label: "Approved" },
@@ -379,6 +474,7 @@ export function PermissionRequestsWorkspace({
             <Badge variant="secondary">
               {filteredRequests.length} visible / {totalRequests} total requests
             </Badge>
+            <Badge variant="secondary">{dateRangeLabel}</Badge>
           </div>
         </CardHeader>
       </Card>

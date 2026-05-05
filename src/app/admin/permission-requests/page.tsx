@@ -57,6 +57,7 @@ export default async function AdminPermissionRequestsPage() {
             permissionName: request.permission.name,
             reason: request.reason,
             status: request.status,
+            createdAtIso: request.createdAt.toISOString(),
             createdAtLabel: request.createdAt.toLocaleString("en-US", {
               year: "numeric",
               month: "short",
@@ -64,6 +65,9 @@ export default async function AdminPermissionRequestsPage() {
               hour: "2-digit",
               minute: "2-digit",
             }),
+            reviewedAtIso: request.reviewedAt
+              ? request.reviewedAt.toISOString()
+              : null,
             reviewedAtLabel: request.reviewedAt
               ? request.reviewedAt.toLocaleString("en-US", {
                   year: "numeric",

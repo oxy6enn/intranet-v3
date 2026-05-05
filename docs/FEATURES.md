@@ -107,6 +107,7 @@
 
 - [x] search keyword
 - [x] filter `all / pending / approved / rejected`
+- [x] date range filter `all / 7d / 30d / 90d / custom`
 - [x] export visible CSV
 - [x] export summary CSV
 
@@ -131,6 +132,6 @@
 ## Recommended Next Features
 
 - [x] export / reporting สำหรับ permission request inbox
-- [ ] advanced filters เช่น date range
+- [x] advanced filters เช่น date range
 - [ ] audit/reporting เชิงลึก
 - [ ] ThaiD prep / implementation
