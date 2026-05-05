@@ -26,6 +26,7 @@
 - [x] Export / reporting for permission request inbox
 - [x] Advanced date range filters for permission request inbox
 - [x] Activity audit exports and date range filters
+- [x] Admin reports and cross-view summaries
 
 ## Next Recommended Work
 

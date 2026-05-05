@@ -578,6 +578,18 @@ export function DashboardShell({
                       Review request inbox
                     </Link>
                   ) : null}
+                  {isAdmin ? (
+                    <Link
+                      href="/admin/reports"
+                      className={cn(
+                        buttonVariants({ variant: "outline" }),
+                        "justify-start rounded-xl"
+                      )}
+                    >
+                      <ChartColumn className="size-4" />
+                      Admin reports
+                    </Link>
+                  ) : null}
                 </div>
               </article>
             </section>

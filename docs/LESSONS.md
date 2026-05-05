@@ -707,3 +707,24 @@ Checklist หลังทำเสร็จ:
 - ความต่างระหว่าง `search`, `status filter`, และ `date filter`
 - การระวัง bug จาก timezone และขอบเขตวันเวลา
 
+---
+
+## Lesson Add-on: Admin Cross-View Reports
+
+เป้าหมาย:
+
+- ทำให้ admin เห็นภาพรวมจากหลายมุมมองในหน้าเดียว โดยไม่ต้องสลับไปมาระหว่าง inbox, activity, และ notifications
+
+สิ่งที่ควรมี:
+
+- summary cards จากข้อมูลจริง
+- recent review decisions
+- recent activity window
+- export summary สำหรับนำไปใช้งานต่อ
+
+สิ่งที่ควรเรียนรู้จากรอบนี้:
+
+- เมื่อไรควรใช้ server-side aggregation แล้วส่งผลลัพธ์มาที่ UI ทีเดียว
+- วิธี reuse data model เดิมให้เกิด reporting feature โดยไม่ต้องเพิ่ม table ใหม่ทันที
+- ความต่างระหว่าง `operational inbox` กับ `management report`
+

@@ -3,6 +3,7 @@ export const PERMISSION_CODES = {
   EMPLOYEE_CREATE: "employee:create",
   EMPLOYEE_UPDATE: "employee:update",
   PERMISSION_MANAGE: "permission:manage",
+  REPORT_VIEW: "report:view",
 } as const;
 
 export type PermissionCode =

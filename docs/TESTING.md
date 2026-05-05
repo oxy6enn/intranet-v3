@@ -162,6 +162,14 @@ npm run test:e2e:headed
 - ให้ตรวจว่า export summary ใช้ค่า filter เดียวกับที่ UI แสดง
 - ถ้าใช้ `type="date"` แบบ client-side ให้ระวังเรื่องขอบเขตเวลา `00:00:00` และ `23:59:59.999`
 
+### Admin cross-view reports
+
+เมื่อเพิ่มหน้า `/admin/reports`:
+
+- ให้ตรวจว่า summary cards สอดคล้องกับข้อมูลรวมจาก permission requests และ activity events จริง
+- ให้ตรวจว่า export CSV ใช้ชุดข้อมูลเดียวกับที่แสดงในหน้า reports
+- ให้ดูว่า search กระทบทั้ง recent review decisions และ recent activity พร้อมกันตามที่ออกแบบ
+
 ## Recommended Verification Order
 
 เวลาปิดงานแต่ละ feature แนะนำให้เช็กตามลำดับนี้:

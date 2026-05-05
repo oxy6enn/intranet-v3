@@ -101,6 +101,9 @@
 - [x] date range filter `all / 7d / 30d / 90d / custom`
 - [x] export visible CSV
 - [x] export summary CSV
+- [x] date range filter `all / 7d / 30d / 90d / custom`
+- [x] export visible CSV
+- [x] export summary CSV
 
 ### `/notifications`
 
@@ -135,6 +138,7 @@
 
 ## Recommended Next Features
 
+- [x] audit/reporting for admin-side reports and cross-view summaries
 - [x] export / reporting สำหรับ permission request inbox
 - [x] advanced filters เช่น date range
 - [ ] audit/reporting เชิงลึก

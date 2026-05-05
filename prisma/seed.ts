@@ -25,6 +25,11 @@ const basePermissions = [
     name: "Manage permissions",
     description: "จัดการ permission และสิทธิ์รายคน",
   },
+  {
+    code: "report:view",
+    name: "View reports",
+    description: "View audit reports and cross-view operational summaries",
+  },
 ];
 
 async function seedPermissions() {
