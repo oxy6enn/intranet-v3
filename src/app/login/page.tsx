@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { LoginForm } from "@/components/auth/login-form";
+import { LoginTestAccounts } from "@/components/auth/login-test-accounts";
 import { auth } from "@/lib/auth";
 import { USER_STATUS } from "@/lib/user-status";
 
@@ -31,7 +32,10 @@ export default async function LoginPage() {
       footerLinkLabel="ไปหน้าสมัครสมาชิก"
       footerLinkHref="/register"
     >
-      <LoginForm />
+      <div className="space-y-6">
+        <LoginForm />
+        <LoginTestAccounts />
+      </div>
     </AuthShell>
   );
 }
