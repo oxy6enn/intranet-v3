@@ -128,3 +128,14 @@ export const E2E_REQUEST_PERMISSION = {
   name: "Request Access Permission",
   description: "Permission used to verify request and approval flow in Playwright",
 };
+
+export const E2E_REPORTS_ADMIN_USER = {
+  name: "E2E Reports Admin",
+  email: "e2e-reports-admin@example.com",
+  password: "E2EReportsAdmin123!",
+};
+
+export const E2E_REPORTS_ADMIN_EMPLOYEE = {
+  code: "EMP010",
+  temporaryPassword: "ReportsAdminTemp123!",
+};

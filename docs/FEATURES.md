@@ -135,6 +135,7 @@
 - [x] admin access control
 - [x] employee / permission / assignment flows
 - [x] permission request flow
+- [x] admin reports route coverage
 
 ## Recommended Next Features
 

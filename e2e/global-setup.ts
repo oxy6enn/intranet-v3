@@ -18,6 +18,8 @@ import {
   E2E_REQUEST_EMPLOYEE,
   E2E_REQUEST_PERMISSION,
   E2E_REQUEST_USER,
+  E2E_REPORTS_ADMIN_EMPLOYEE,
+  E2E_REPORTS_ADMIN_USER,
   E2E_PERMISSION_TARGET_EMPLOYEE,
   E2E_PERMISSION_TARGET_USER,
   E2E_PERMISSION_ADMIN_EMPLOYEE,
@@ -133,6 +135,7 @@ async function globalSetup() {
     await deleteUserByEmail(client, E2E_SUSPENDED_USER.email);
     await deleteUserByEmail(client, E2E_REQUEST_USER.email);
     await deleteUserByEmail(client, E2E_REQUEST_ADMIN_USER.email);
+    await deleteUserByEmail(client, E2E_REPORTS_ADMIN_USER.email);
 
     await resetEmployee(client, {
       id: "e2e-employee-emp001",
@@ -212,6 +215,15 @@ async function globalSetup() {
       temporaryPassword: E2E_REQUEST_ADMIN_EMPLOYEE.temporaryPassword,
       fullName: "E2E Request Admin Employee",
       position: "Access Manager",
+      department: "Governance",
+    });
+
+    await resetEmployee(client, {
+      id: "e2e-employee-emp010",
+      code: E2E_REPORTS_ADMIN_EMPLOYEE.code,
+      temporaryPassword: E2E_REPORTS_ADMIN_EMPLOYEE.temporaryPassword,
+      fullName: "E2E Reports Admin Employee",
+      position: "Audit Lead",
       department: "Governance",
     });
 
