@@ -69,6 +69,7 @@ npm run test:e2e
 
 - `README.md` — ภาพรวมโปรเจกต์, สถานะล่าสุด, และภาพรวม feature
 - `docs/ROADMAP.md` — roadmap และ implementation plan แบบ step-by-step
+- `docs/PHASES.md` — สรุป phase และ post-phase expansion แบบอ่านเร็ว
 - `docs/LESSONS.md` — บทเรียน, troubleshooting, และสิ่งที่เรียนรู้ระหว่างพัฒนา
 - `docs/FEATURES.md` — สรุปว่า feature ไหนมีแล้วบ้างในระบบตอนนี้
 - `docs/TESTING.md` — วิธีรัน test, coverage ปัจจุบัน, และ troubleshooting ด้านการทดสอบ
@@ -89,6 +90,7 @@ docs/ROADMAP.md
 ถ้าต้องการดู:
 
 - สิ่งที่ระบบทำได้แล้ว ให้เปิด `docs/FEATURES.md`
+- สถานะ phase ปัจจุบัน ให้เปิด `docs/PHASES.md`
 - วิธีทดสอบและ coverage ให้เปิด `docs/TESTING.md`
 - เหตุผลของแนวทางที่เลือก ให้เปิด `docs/DECISIONS.md`
 

@@ -1,119 +1,134 @@
 # Features Overview
 
-ไฟล์นี้ใช้สรุปว่า “ตอนนี้ระบบทำอะไรได้แล้วบ้าง” แบบเน้นอ่านเร็ว
+ไฟล์นี้ใช้สรุปว่า “ตอนนี้ระบบทำอะไรได้แล้วบ้าง” แบบเน้นอ่านเร็ว และเหมาะกับการเช็กสถานะล่าสุดของ product
+
+## Snapshot
+
+- [x] Auth foundation
+- [x] Employee identify flow
+- [x] Role + direct permission system
+- [x] Admin management พื้นฐาน
+- [x] Permission request workflow
+- [x] Dashboard real data
+- [x] Notification center
+- [x] Activity log
+- [x] Search / filters ในหน้า operation หลัก
+- [ ] Export / reporting
+- [ ] Advanced date range filters
+- [ ] ThaiD implementation
 
 ## Core Platform
 
-- Next.js App Router
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
-- Better Auth
-- Prisma ORM + PostgreSQL
+- [x] Next.js App Router
+- [x] TypeScript
+- [x] Tailwind CSS
+- [x] shadcn/ui
+- [x] Better Auth
+- [x] Prisma ORM + PostgreSQL
 
 ## Authentication And Identity
 
-- สมัครสมาชิกด้วย `email/password`
-- login ด้วย `email/password`
-- session-based authentication ผ่าน Better Auth
-- flow `pending_identify -> active -> suspended`
-- redirect ตามสถานะผู้ใช้ด้วย middleware
+- [x] สมัครสมาชิกด้วย `email/password`
+- [x] login ด้วย `email/password`
+- [x] session-based authentication ผ่าน Better Auth
+- [x] flow `pending_identify -> active -> suspended`
+- [x] redirect ตามสถานะผู้ใช้ด้วย middleware
 
 ## Employee Identify Flow
 
-- หน้า `/identify`
-- verify ด้วย `employee_code + temporary_password`
-- claim employee record เข้ากับ user
-- update user status เป็น `active` หลัง verify สำเร็จ
+- [x] หน้า `/identify`
+- [x] verify ด้วย `employee_code + temporary_password`
+- [x] claim employee record เข้ากับ user
+- [x] update user status เป็น `active` หลัง verify สำเร็จ
 
 ## Authorization
 
-- role พื้นฐาน:
-  - `user`
-  - `admin`
-  - `super_admin`
-- permission model แบบ direct assignment
-- helper `can()` และ route/api guards สำหรับเช็กสิทธิ์
+- [x] role พื้นฐาน `user / admin / super_admin`
+- [x] permission model แบบ direct assignment
+- [x] helper `can()` และ route/api guards
 
 ## Admin Features
 
 ### Employees
 
-- ดูรายการพนักงาน
-- สร้างพนักงาน
-- แก้ไขข้อมูลพนักงาน
+- [x] ดูรายการพนักงาน
+- [x] สร้างพนักงาน
+- [x] แก้ไขข้อมูลพนักงาน
 
 ### Permissions
 
-- ดูรายการ permissions
-- สร้าง permission ใหม่
+- [x] ดูรายการ permissions
+- [x] สร้าง permission ใหม่
 
 ### User Permissions
 
-- ดูผู้ใช้ในระบบ
-- assign direct permission ให้ user รายคน
+- [x] ดูผู้ใช้ในระบบ
+- [x] assign direct permission ให้ user รายคน
 
 ### Permission Request Inbox
 
-- review request แบบ approve / reject
-- approval rate
-- top requested permissions
-- latest review activity
-- most active requesters
-- search / status filters
+- [x] review request แบบ approve / reject
+- [x] approval rate
+- [x] top requested permissions
+- [x] latest review activity
+- [x] most active requesters
+- [x] search / status filters
 
 ## User Self-Service Features
 
-- หน้า `/dashboard` ใช้ข้อมูลจริงจากฐานข้อมูล
-- หน้า `/profile`
-- หน้า `/profile/security`
-- social linking scaffold สำหรับ Google / LINE
-- หน้า `/permissions/request` สำหรับขอสิทธิ์เพิ่ม
-- หน้า `/notifications`
-- หน้า `/activity`
+- [x] หน้า `/dashboard` ใช้ข้อมูลจริงจากฐานข้อมูล
+- [x] หน้า `/profile`
+- [x] หน้า `/profile/security`
+- [x] social linking scaffold สำหรับ Google / LINE
+- [x] หน้า `/permissions/request` สำหรับขอสิทธิ์เพิ่ม
+- [x] หน้า `/notifications`
+- [x] หน้า `/activity`
 
 ## Activity And Visibility
 
-- Notification center
-- Activity log timeline
-- dashboard snapshot จากข้อมูลจริง
-- admin insights สำหรับ permission requests
+- [x] Notification center
+- [x] Activity log timeline
+- [x] dashboard snapshot จากข้อมูลจริง
+- [x] admin insights สำหรับ permission requests
 
 ## Search And Filters
 
-- `/activity`
-  - search keyword
-  - filter `all / identify / request`
-- `/notifications`
-  - search keyword
-  - filter `all / updates / queue / reviews`
-- `/admin/permission-requests`
-  - search keyword
-  - filter `all / pending / approved / rejected`
+### `/activity`
+
+- [x] search keyword
+- [x] filter `all / identify / request`
+
+### `/notifications`
+
+- [x] search keyword
+- [x] filter `all / updates / queue / reviews`
+
+### `/admin/permission-requests`
+
+- [x] search keyword
+- [x] filter `all / pending / approved / rejected`
 
 ## UI / UX Foundation
 
-- responsive layout
-- dark / light mode
-- loading state
-- not-found page
-- Thai font base ด้วย `Anuphan`
-- English-friendly fallback ด้วย `Inter`
+- [x] responsive layout
+- [x] dark / light mode
+- [x] loading state
+- [x] not-found page
+- [x] Thai font base ด้วย `Anuphan`
+- [x] English-friendly fallback ด้วย `Inter`
 
-## Current Status Summary
+## Testing Confidence
 
-ถ้ามองแบบ product level ตอนนี้ระบบมีครบแล้วในระดับนี้:
+- [x] logic tests
+- [x] Playwright e2e coverage สำหรับ flow หลัก
+- [x] auth flow
+- [x] admin access control
+- [x] employee / permission / assignment flows
+- [x] permission request flow
 
-- auth + identify
-- admin CRUD พื้นฐานที่จำเป็น
-- permission request workflow
-- dashboard real data
-- notifications + activity
-- search/filter ในหน้า operation หลัก
+## Recommended Next Features
 
-ถัดจากนี้เหมาะกับการต่อยอดเช่น:
-
-- reporting / export
-- advanced filters เช่น date range
-- audit/reporting เชิงลึก
-- ThaiD prep ในอนาคต
+- [ ] export / reporting สำหรับ admin
+- [ ] advanced filters เช่น date range
+- [ ] audit/reporting เชิงลึก
+- [ ] ThaiD prep / implementation
