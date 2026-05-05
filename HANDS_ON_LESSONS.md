@@ -639,3 +639,30 @@ Checklist หลังทำเสร็จ:
 - การเก็บ snapshot ใน event เพื่อไม่ให้ timeline พังเมื่อข้อมูลหลักเปลี่ยน
 - การออกแบบ event schema ให้ขยายต่อได้ในอนาคต
 
+---
+
+## Lesson Add-on: Search And Filters
+
+เป้าหมาย:
+
+- ทำให้หน้าที่มีข้อมูลจริงเริ่มใช้งานได้คล่องขึ้น ไม่ใช่แค่แสดงรายการทั้งหมด
+
+สิ่งที่ควรมี:
+
+- search input สำหรับ keyword
+- filter buttons หรือ tabs สำหรับ scope/status
+- summary cards ที่สะท้อนผลลัพธ์หลัง filter
+- การแยก server page กับ client view component ให้รับผิดชอบคนละชั้น
+
+ตัวอย่างหน้าที่เหมาะกับ pattern นี้:
+
+- `/activity`
+- `/notifications`
+- `/admin/permission-requests`
+
+สิ่งที่ควรเรียนรู้จากรอบนี้:
+
+- ความต่างระหว่าง `data loading` กับ `data interaction`
+- การใช้ `useDeferredValue` เพื่อลดความกระตุกเวลา filter ข้อมูล
+- การออกแบบหน้าแบบ “query on server, refine on client” เพื่อให้ต่อยอดง่ายและไม่เพิ่ม complexity ฝั่ง API เร็วเกินไป
+

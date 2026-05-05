@@ -619,3 +619,23 @@ Social Provider = Login method เสริมหลัง active
   - permission request approved / rejected
 - จากนั้นค่อยเพิ่มหน้า `/activity` เพื่อใช้เป็น timeline กลางของระบบ
 
+## 25. Search And Filters For Ops Views
+
+- หลังจากระบบเริ่มมีข้อมูลจริงในหลายหน้าแล้ว ให้เพิ่ม `search / filters` ให้กับหน้าที่ user และ admin ใช้งานบ่อย
+- แนะนำให้เริ่มจาก:
+  - `/activity`
+  - `/notifications`
+  - `/admin/permission-requests`
+- pattern ที่แนะนำ:
+  - ให้ `page.tsx` เป็น server component สำหรับ query ข้อมูลจริง
+  - map ข้อมูลให้อยู่ใน shape ที่ render ง่าย
+  - ส่งต่อไปยัง client component เช่น `*-view.tsx` หรือ `*-workspace.tsx`
+  - ใช้ `useState + useDeferredValue + useMemo` สำหรับ search/filter ฝั่ง UI
+- เหตุผลที่ใช้ pattern นี้:
+  - ไม่ต้องเพิ่ม API ใหม่ถ้าไม่จำเป็น
+  - รักษา SSR data loading เดิมไว้
+  - ทำให้ search/filter ตอบสนองไวและ refactor ง่าย
+- สิ่งที่ควรระวัง:
+  - อย่าทำให้ action component เดิม เช่น approve/reject แตกจาก e2e selectors
+  - ถ้ามี insight cards บนหน้าเดียวกัน ให้คำนวณจาก `filtered data` เพื่อให้ผู้ใช้เห็นภาพตาม filter ปัจจุบันจริง
+

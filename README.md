@@ -271,3 +271,21 @@ CODEX_STEP_BY_STEP.md
 - เพิ่มหน้า `/activity` เพื่อดู timeline ของเหตุการณ์เหล่านี้
 - dashboard และ notification center ถูกเชื่อม route ไปยัง activity log แล้ว
 
+## Search And Filters
+
+- เพิ่ม `search / filters` ให้ 3 หน้าสำคัญที่เป็น workspace ฝั่งปฏิบัติการ:
+  - `/activity`
+  - `/notifications`
+  - `/admin/permission-requests`
+- แนวทางที่ใช้คือให้ server page query ข้อมูลจริงตามเดิม แล้วส่งเข้า client view component เพื่อกรองแบบ realtime ฝั่ง UI
+- หน้า `/activity`:
+  - search ตาม title / description / actor / subject / event type
+  - filter `all / identify / request`
+- หน้า `/notifications`:
+  - search ตาม permission, note, reviewer, requester
+  - filter `all / updates / queue / reviews`
+- หน้า `/admin/permission-requests`:
+  - search ตาม requester, permission, review note, status
+  - filter `all / pending / approved / rejected`
+- เป้าหมายของรอบนี้คือทำให้ระบบ “ใช้งานจริง” ได้คล่องขึ้น โดยไม่เปลี่ยน backend contract เดิมและไม่กระทบ flow ทดสอบหลัก
+
