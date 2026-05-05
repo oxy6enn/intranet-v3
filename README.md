@@ -69,6 +69,7 @@ npm run test:e2e
 
 - `README.md` — ภาพรวมโปรเจกต์, สถานะล่าสุด, และภาพรวม feature
 - `docs/ROADMAP.md` — roadmap และ implementation plan แบบ step-by-step
+- `docs/ROADMAP_SUMMARY.md` — สรุป roadmap แบบอ่านเร็ว
 - `docs/PHASES.md` — สรุป phase และ post-phase expansion แบบอ่านเร็ว
 - `docs/LESSONS.md` — บทเรียน, troubleshooting, และสิ่งที่เรียนรู้ระหว่างพัฒนา
 - `docs/FEATURES.md` — สรุปว่า feature ไหนมีแล้วบ้างในระบบตอนนี้
@@ -82,14 +83,21 @@ npm run test:e2e
 เปิดโปรเจกต์ใน VS Code แล้วให้ Codex อ่านไฟล์นี้ก่อน:
 
 ```text
+docs/ROADMAP_SUMMARY.md
+```
+
+จากนั้นค่อยต่อด้วย:
+
+```text
 docs/ROADMAP.md
 ```
 
-จากนั้นให้ Codex ทำทีละ Phase ห้ามข้าม Phase
+แล้วให้ Codex ทำทีละ Phase ห้ามข้าม Phase
 
 ถ้าต้องการดู:
 
 - สิ่งที่ระบบทำได้แล้ว ให้เปิด `docs/FEATURES.md`
+- ภาพรวม roadmap แบบเร็ว ให้เปิด `docs/ROADMAP_SUMMARY.md`
 - สถานะ phase ปัจจุบัน ให้เปิด `docs/PHASES.md`
 - วิธีทดสอบและ coverage ให้เปิด `docs/TESTING.md`
 - เหตุผลของแนวทางที่เลือก ให้เปิด `docs/DECISIONS.md`
