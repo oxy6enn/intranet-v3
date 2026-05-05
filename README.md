@@ -14,10 +14,7 @@ Email/Password → Identify Employee → Active User → Link Social Provider
 - `docs/ROADMAP.md` — roadmap และ implementation plan แบบ step-by-step
 - `docs/LESSONS.md` — บทเรียน, troubleshooting, และสิ่งที่เรียนรู้ระหว่างพัฒนา
 
-หมายเหตุ:
-
-- ไฟล์เดิม `CODEX_STEP_BY_STEP.md` และ `HANDS_ON_LESSONS.md` ยังอยู่ที่ root ในรูปแบบไฟล์ชี้ทาง เพื่อให้ลิงก์เก่ายังไม่แตก
-- ต่อจากนี้ให้ใช้งานไฟล์ใน `docs/` เป็นแหล่งอ้างอิงหลัก
+ต่อจากนี้ให้ใช้งานไฟล์ใน `docs/` เป็นแหล่งอ้างอิงหลักของโปรเจกต์
 
 ## แนวคิดระบบ
 
