@@ -3,10 +3,12 @@ import { requireActiveSession } from "@/lib/auth-guards";
 import { PERMISSION_REQUEST_STATUS } from "@/lib/permission-request-status";
 import { prisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/user-role";
+import { getWorkspaceShellData } from "@/lib/workspace-shell-data";
 
 export default async function NotificationsPage() {
   const session = await requireActiveSession();
   const isAdmin = isAdminRole(session.user.role);
+  const workspace = await getWorkspaceShellData(session.user);
 
   const [userRequestUpdates, adminReviewQueue, latestReviewedItems] =
     await Promise.all([
@@ -105,6 +107,7 @@ export default async function NotificationsPage() {
 
   return (
     <NotificationsCenterView
+      workspace={workspace}
       isAdmin={isAdmin}
       userRequestUpdates={userRequestUpdates.map((item) => ({
         id: item.id,

@@ -13,7 +13,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { WorkspaceShell } from "@/components/workspace/workspace-shell";
 import { cn } from "@/lib/utils";
+import type { WorkspaceShellData } from "@/lib/workspace-shell-data";
 
 type UserRequestUpdateItem = {
   id: string;
@@ -46,6 +48,7 @@ type LatestReviewedItem = {
 };
 
 type NotificationsCenterViewProps = {
+  workspace: WorkspaceShellData;
   isAdmin: boolean;
   userRequestUpdates: UserRequestUpdateItem[];
   adminReviewQueue: AdminReviewQueueItem[];
@@ -55,6 +58,7 @@ type NotificationsCenterViewProps = {
 type NotificationScope = "all" | "updates" | "queue" | "reviews";
 
 export function NotificationsCenterView({
+  workspace,
   isAdmin,
   userRequestUpdates,
   adminReviewQueue,
@@ -144,8 +148,8 @@ export function NotificationsCenterView({
     (isAdmin ? filteredAdminQueue.length + filteredReviewedItems.length : 0);
 
   return (
-    <main className="min-h-screen bg-muted/40 px-6 py-10 text-foreground">
-      <div className="mx-auto max-w-7xl space-y-6">
+    <WorkspaceShell {...workspace}>
+      <div className="space-y-6">
         <div className="space-y-2">
           <Badge variant="outline">Workspace / Notifications</Badge>
           <h1 className="text-3xl font-semibold tracking-tight">
@@ -432,6 +436,6 @@ export function NotificationsCenterView({
           </div>
         ) : null}
       </div>
-    </main>
+    </WorkspaceShell>
   );
 }

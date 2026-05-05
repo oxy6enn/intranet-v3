@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { WorkspaceShell } from "@/components/workspace/workspace-shell";
 import {
   Card,
   CardContent,
@@ -10,9 +11,11 @@ import { SocialLinkButtons } from "@/components/profile/social-link-buttons";
 import { requireActiveSession } from "@/lib/auth-guards";
 import { prisma } from "@/lib/prisma";
 import { SOCIAL_PROVIDERS } from "@/lib/social-providers";
+import { getWorkspaceShellData } from "@/lib/workspace-shell-data";
 
 export default async function ProfileSecurityPage() {
   const session = await requireActiveSession();
+  const workspace = await getWorkspaceShellData(session.user);
 
   const linkedAccounts = await prisma.account.findMany({
     where: {
@@ -54,8 +57,8 @@ export default async function ProfileSecurityPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-muted/40 px-6 py-10 text-foreground">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6">
+    <WorkspaceShell {...workspace}>
+      <div className="flex max-w-6xl flex-col gap-6">
         <div className="space-y-2">
           <Badge variant="outline">Phase 9 / Profile Security</Badge>
           <h1 className="text-3xl font-semibold tracking-tight">
@@ -79,6 +82,6 @@ export default async function ProfileSecurityPage() {
           </CardContent>
         </Card>
       </div>
-    </main>
+    </WorkspaceShell>
   );
 }

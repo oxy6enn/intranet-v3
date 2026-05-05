@@ -1,10 +1,13 @@
 import { Badge } from "@/components/ui/badge";
+import { WorkspaceShell } from "@/components/workspace/workspace-shell";
 import { PermissionRequestForm } from "@/components/permissions/permission-request-form";
 import { requireActiveSession } from "@/lib/auth-guards";
 import { prisma } from "@/lib/prisma";
+import { getWorkspaceShellData } from "@/lib/workspace-shell-data";
 
 export default async function PermissionRequestPage() {
   const session = await requireActiveSession();
+  const workspace = await getWorkspaceShellData(session.user);
 
   const [permissions, userPermissions, requestHistory] = await Promise.all([
     prisma.permission.findMany({
@@ -57,8 +60,8 @@ export default async function PermissionRequestPage() {
   );
 
   return (
-    <main className="min-h-screen bg-muted/40 px-6 py-10 text-foreground">
-      <div className="mx-auto max-w-7xl space-y-6">
+    <WorkspaceShell {...workspace}>
+      <div className="space-y-6">
         <div className="space-y-2">
           <Badge variant="outline">Access / Permission Requests</Badge>
           <h1 className="text-3xl font-semibold tracking-tight">
@@ -89,6 +92,6 @@ export default async function PermissionRequestPage() {
           }))}
         />
       </div>
-    </main>
+    </WorkspaceShell>
   );
 }

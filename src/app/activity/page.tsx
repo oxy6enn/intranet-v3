@@ -2,10 +2,12 @@ import { ActivityLogView } from "@/components/activity/activity-log-view";
 import { requireActiveSession } from "@/lib/auth-guards";
 import { prisma } from "@/lib/prisma";
 import { isAdminRole } from "@/lib/user-role";
+import { getWorkspaceShellData } from "@/lib/workspace-shell-data";
 
 export default async function ActivityPage() {
   const session = await requireActiveSession();
   const isAdmin = isAdminRole(session.user.role);
+  const workspace = await getWorkspaceShellData(session.user);
 
   const where = isAdmin
     ? undefined
@@ -33,6 +35,7 @@ export default async function ActivityPage() {
 
   return (
     <ActivityLogView
+      workspace={workspace}
       isAdmin={isAdmin}
       totalEvents={totalEvents}
       events={events.map((event) => ({
