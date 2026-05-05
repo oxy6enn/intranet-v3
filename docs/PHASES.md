@@ -4,16 +4,16 @@
 
 ## Main Phases
 
-- [x] Phase 1 — Project Setup
-- [x] Phase 2 — Prisma Setup
-- [x] Phase 3 — Better Auth Setup
-- [x] Phase 4 — Register/Login Pages
-- [x] Phase 5 — Identify
-- [x] Phase 6 — Middleware
-- [x] Phase 7 — Admin Employee CRUD
-- [x] Phase 8 — Permission System
-- [x] Phase 9 — Social Linking Scaffold
-- [x] Phase 10 — Review & Refactor
+- [x] Phase 1 - Project Setup
+- [x] Phase 2 - Prisma Setup
+- [x] Phase 3 - Better Auth Setup
+- [x] Phase 4 - Register/Login Pages
+- [x] Phase 5 - Identify
+- [x] Phase 6 - Middleware
+- [x] Phase 7 - Admin Employee CRUD
+- [x] Phase 8 - Permission System
+- [x] Phase 9 - Social Linking Scaffold
+- [x] Phase 10 - Review & Refactor
 
 ## Post-Phase Expansion
 
