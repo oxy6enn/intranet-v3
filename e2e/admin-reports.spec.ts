@@ -40,7 +40,10 @@ test("admin can view the cross-view audit reports workspace", async ({ page }) =
 
   await expect(page).toHaveURL(/\/dashboard$/);
 
-  await page.getByRole("link", { name: "Admin reports" }).click();
+  await page
+    .locator("aside")
+    .getByRole("link", { name: "Admin reports", exact: true })
+    .click();
   await expect(page).toHaveURL(/\/admin\/reports$/);
 
   await expect(
